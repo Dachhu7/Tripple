@@ -765,7 +765,7 @@
 }
 
 /* ==============================
-   ABOUT SECTION (DARK + BG)
+    SECTION (DARK + BG)
 ============================== */
 
 .about-section {
@@ -780,7 +780,7 @@
 .about-bg {
   position: absolute;
   inset: 0;
-  background: url("/assets/about-bg.jpg") no-repeat center/cover;
+  background: url("assets/about-bg.jpg") no-repeat center/cover;
   opacity: 0.25;
   z-index: 0;
 }
@@ -1576,7 +1576,7 @@
   inset: 0;
   background:
     linear-gradient(rgba(3,3,3,0.75), rgba(3,3,3,0.9)),
-    url("/assets/about-bg.jpg");
+    url("assets/about-bg.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
