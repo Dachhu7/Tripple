@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TheTripple</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<nav class="navbar fixed-top">
+  <div class="container d-flex justify-content-between">
+    <h2 class="logo">TheTripple</h2>
+    <div class="menu">Menu</div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero nx-sec">
+  
+  <video autoplay muted loop class="hero-video">
+    <source src="assets/video.mp4" type="video/mp4">
+  </video>
+
+  <div class="overlay"></div>
+
+  <div class="hero-image" id="astronaut">
+    <img src="assets/astronaut.png" alt="astronaut">
+  </div>
+
+  <div class="hero-content">
+    <h1 class="hero-text">
+      <span class="left">We Scale</span><br>
+      <span class="left">Your Business With</span><br>
+      <span class="right">Mad Creativity</span>
+    </h1>
+  </div>
+
+</section>
+
+<!-- ABOUT US SECTION -->
+<section class="aboutus-section nx-sec overlap-section" id="section-aboutus">
+
+  <!-- STICKY WRAPPER -->
+  <div class="aboutus-sticky-wrapper">
+
+    <!-- BACKGROUND -->
+    <div class="au-bg-base"></div>
+    <div class="au-grain"></div>
+
+    <!-- ══════════════════════════════
+         BLOCK 1 — OPENING STATEMENT
+    ══════════════════════════════ -->
+    <div class="au-opening" id="au-opening">
+      <div class="au-container">
+        <p class="au-eyebrow" id="au-eyebrow">ABOUT US</p>
+
+        <div class="au-headline-wrap" id="au-headline-wrap">
+          <h1 class="au-headline">
+            <span class="au-hl-line" data-delay="0">Meet</span>
+            <span class="au-hl-line au-hl-accent" data-delay="1">Tripple.</span>
+            <span class="au-hl-line" data-delay="2">We make brands</span>
+            <span class="au-hl-line au-hl-stroke" data-delay="3">blow up.</span>
+          </h1>
+        </div>
+
+        <div class="au-opening-sub" id="au-opening-sub">
+          <p>
+            Built for brands that want to stand out, glow up, and blow up.
+            Tripple is a creative growth studio obsessed with making brands look cool, grow fast, and feel unforgettable.
+          </p>
+
+          <div class="au-scroll-hint">
+            <span class="au-scroll-line"></span>
+            <p>Scroll to explore</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         BLOCK 2 — MARQUEE DIVIDER
+    ══════════════════════════════ -->
+    <div class="au-marquee-divider" id="au-marquee">
+      <div class="au-marquee-track au-marquee-fwd">
+        <span>Creative Studio</span><em>✦</em>
+        <span>Bangalore</span><em>✦</em>
+        <span>Growth Agency</span><em>✦</em>
+        <span>Brand Builders</span><em>✦</em>
+        <span>Visual Thinkers</span><em>✦</em>
+        <span>Digital Natives</span><em>✦</em>
+        <span>Creative Studio</span><em>✦</em>
+        <span>Bangalore</span><em>✦</em>
+        <span>Growth Agency</span><em>✦</em>
+        <span>Brand Builders</span><em>✦</em>
+        <span>Visual Thinkers</span><em>✦</em>
+        <span>Digital Natives</span><em>✦</em>
+      </div>
+
+      <div class="au-marquee-track au-marquee-rev">
+        <span>Mad Creativity</span><em>★</em>
+        <span>Bold Ideas</span><em>★</em>
+        <span>Real Results</span><em>★</em>
+        <span>Obsessed Team</span><em>★</em>
+        <span>Trend Chasers</span><em>★</em>
+        <span>Vibe Setters</span><em>★</em>
+        <span>Mad Creativity</span><em>★</em>
+        <span>Bold Ideas</span><em>★</em>
+        <span>Real Results</span><em>★</em>
+        <span>Obsessed Team</span><em>★</em>
+        <span>Trend Chasers</span><em>★</em>
+        <span>Vibe Setters</span><em>★</em>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         BLOCK 3 — SPLIT STORY
+    ══════════════════════════════ -->
+    <div class="au-split-story" id="au-split">
+      <div class="au-container au-split-inner">
+
+        <!-- LEFT -->
+        <div class="au-split-left" id="au-split-left">
+          <div class="au-split-year">
+            <span class="au-year-num">2022</span>
+            <span class="au-year-label">Founded in<br>Bangalore</span>
+          </div>
+
+          <div class="au-split-img-stack">
+
+            <div class="au-img-card au-img-card-back">
+              <video autoplay muted loop playsinline>
+                <source src="/assets/about.mp4" type="video/mp4">
+              </video>
+            </div>
+
+            <div class="au-img-card au-img-card-front">
+              <video autoplay muted loop playsinline>
+                <source src="/assets/about.mp4" type="video/mp4">
+              </video>
+
+              <div class="au-img-badge">
+                <span class="au-badge-num">50+</span>
+                <span class="au-badge-txt">Projects Delivered</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="au-split-right" id="au-split-right">
+
+          <div class="au-story-block" id="au-story-0">
+            <span class="au-story-index">01</span>
+            <h2 class="au-story-heading">We started with a problem.</h2>
+            <p class="au-story-body">
+              Most Bangalore businesses had incredible products but zero presence. Great cafes nobody found.
+            </p>
+          </div>
+
+          <div class="au-story-block" id="au-story-1">
+            <span class="au-story-index">02</span>
+            <h2 class="au-story-heading">We built a team of obsessives.</h2>
+            <p class="au-story-body">
+              Designers who lose sleep over kerning. Strategists who treat every brand like it's their own.
+            </p>
+          </div>
+
+          <div class="au-story-block" id="au-story-2">
+            <span class="au-story-index">03</span>
+            <h2 class="au-story-heading">Now we scale brands for real.</h2>
+            <p class="au-story-body">
+              From identity to performance — we own every layer.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+
+<!-- SERVICES -->
+<section class="services-section nx-sec">
+
+  <video class="services-bg-video" autoplay muted loop playsinline>
+    <source src="/assets/12638483_2088_720_60fps.mp4" type="video/mp4">
+  </video>
+
+  <div class="services-container">
+
+    <h2 class="section-title">WHAT WE DO</h2>
+    <p class="section-subtitle">Everything You Need!</p>
+
+  <!-- ── MARQUEE TICKER ── -->
+  <div class="blogs-ticker-wrap" id="blogs-ticker">
+    <div class="blogs-ticker-track">
+      <span>Branding</span><span class="ticker-sep">✦</span>
+      <span>Web Design</span><span class="ticker-sep">✦</span>
+      <span>Content Strategy</span><span class="ticker-sep">✦</span>
+      <span>Growth Hacks</span><span class="ticker-sep">✦</span>
+      <span>Digital Marketing</span><span class="ticker-sep">✦</span>
+      <span>Creative Direction</span><span class="ticker-sep">✦</span>
+      <span>SEO & Ads</span><span class="ticker-sep">✦</span>
+      <span>Visual Identity</span><span class="ticker-sep">✦</span>
+      <!-- duplicate for seamless loop -->
+      <span>Branding</span><span class="ticker-sep">✦</span>
+      <span>Web Design</span><span class="ticker-sep">✦</span>
+      <span>Content Strategy</span><span class="ticker-sep">✦</span>
+      <span>Growth Hacks</span><span class="ticker-sep">✦</span>
+      <span>Digital Marketing</span><span class="ticker-sep">✦</span>
+      <span>Creative Direction</span><span class="ticker-sep">✦</span>
+      <span>SEO & Ads</span><span class="ticker-sep">✦</span>
+      <span>Visual Identity</span><span class="ticker-sep">✦</span>
+    </div>
+  </div>
+
+    <div class="services-scroll-wrapper">
+      <div class="services-grid">
+
+        <div class="card" style="background-image:url('/assets/web.jpg')">
+          <h3>Websites</h3>
+          <p>We design sleek, high-converting websites that turn visitors into customers.</p>
+        </div>
+
+        <div class="card" style="background-image:url('/assets/content.jpg')">
+          <h3>Content Creation</h3>
+          <p>We create high-quality, on-brand content that engages and inspires.</p>
+        </div>
+
+        <div class="card" style="background-image:url('/assets/design.jpg')">
+          <h3>Posters & Designs</h3>
+          <p>Visually stunning creatives that capture attention instantly.</p>
+        </div>
+
+        <div class="card" style="background-image:url('/assets/social.jpg')">
+          <h3>Social Media</h3>
+          <p>We manage your brand presence with strategy and daily engagement.</p>
+        </div>
+
+        <div class="card" style="background-image:url('/assets/Video\ &\ Photoshoots.jpg')">
+          <h3>Video & Photoshoots</h3>
+          <p>Professional shoots and cinematic edits for powerful storytelling.</p>
+        </div>
+
+        <div class="card" style="background-image:url('/assets/Digital\ Marketing.jpg')">
+          <h3>Digital Marketing</h3>
+          <p>SEO, ads & campaigns to boost visibility and maximize ROI.</p>
+        </div>
+
+        <div class="card" style="background-image:url('/assets/Growth\ Strategies.jpg')">
+          <h3>Growth Strategies</h3>
+          <p>Smart strategies designed for long-term business success.</p>
+        </div>
+
+        <div class="card" style="background-image:url('/assets/Collaborations.jpg')">
+          <h3>Collaborations</h3>
+          <p>Partnering with brands to increase reach and credibility.</p>
+        </div>
+
+        <div class="card" style="background-image:url('/assets/Events.jpg')">
+          <h3>Events</h3>
+          <p>Memorable brand experiences and product launches.</p>
+        </div>
+
+        <div class="card highlight" style="background-image:url('/assets/Clubhouses.jpg')">
+          <h3>Coming Soon</h3>
+          <p>Clubhouses & unique spaces are on the way.</p>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<section>
+  <!-- ══════════════════════════════
+       BLOCK 6 — CAPABILITIES STRIP
+  ══════════════════════════════ -->
+  <div class="au-team-wrap" id="au-team">
+    <div class="au-container">
+      <div class="au-team-header">
+        <p class="au-eyebrow">HOW WE WORK</p>
+        <h2 class="au-team-title">The Way<br><span>We Build Growth.</span></h2>
+      </div>
+
+      <div class="au-team-strip">
+
+        <div class="au-team-card" data-team-index="0">
+          <div class="au-team-img-wrap">
+            <img src="/assets/pexels-sasha-kim-9413785.jpg" alt="Strategy First" class="au-team-img" />
+            <div class="au-team-img-overlay"></div>
+          </div>
+          <div class="au-team-info">
+            <h3 class="au-team-name">Strategy First</h3>
+            <p class="au-team-role">Foundation Before Execution</p>
+            <p class="au-team-vibe">We don’t jump into execution. Every move is backed by clear strategy, ensuring your brand grows with direction, not guesswork.</p>
+          </div>
+        </div>
+
+        <div class="au-team-card" data-team-index="1">
+          <div class="au-team-img-wrap">
+            <img src="/assets/pexels-ron-lach-7801147.jpg" alt="Design That Converts" class="au-team-img" />
+            <div class="au-team-img-overlay"></div>
+          </div>
+          <div class="au-team-info">
+            <h3 class="au-team-name">Design That Converts</h3>
+            <p class="au-team-role">Not Just Looks — Results</p>
+            <p class="au-team-vibe">Everything we design has a purpose — to grab attention, build trust, and turn visitors into customers.</p>
+          </div>
+        </div>
+
+        <div class="au-team-card" data-team-index="2">
+          <div class="au-team-img-wrap">
+            <img src="/assets/pexels-rdne-7580753.jpg" alt="Content With Intent" class="au-team-img" />
+            <div class="au-team-img-overlay"></div>
+          </div>
+          <div class="au-team-info">
+            <h3 class="au-team-name">Content With Intent</h3>
+            <p class="au-team-role">Clarity Over Noise</p>
+            <p class="au-team-vibe">We create content that speaks clearly, connects emotionally, and drives action — not just fills space.</p>
+          </div>
+        </div>
+
+        <div class="au-team-card" data-team-index="3">
+          <div class="au-team-img-wrap">
+            <img src="/assets/pexels-jason-dam-3920540-7020105.jpg" alt="Data Driven" class="au-team-img" />
+            <div class="au-team-img-overlay"></div>
+          </div>
+          <div class="au-team-info">
+            <h3 class="au-team-name">Data Driven Decisions</h3>
+            <p class="au-team-role">Measure. Learn. Improve.</p>
+            <p class="au-team-vibe">We rely on real data, not assumptions — continuously optimizing strategies for better performance and ROI.</p>
+          </div>
+        </div>
+
+        <div class="au-team-card" data-team-index="4">
+          <div class="au-team-img-wrap">
+            <img src="/assets/pexels-artempodrez-5715852.jpg" alt="Consistency Wins" class="au-team-img" />
+            <div class="au-team-img-overlay"></div>
+          </div>
+          <div class="au-team-info">
+            <h3 class="au-team-name">Consistency Wins</h3>
+            <p class="au-team-role">Long-Term Growth</p>
+            <p class="au-team-vibe">We believe growth isn’t a one-time spike — it’s built through consistent execution and continuous improvement.</p>
+          </div>
+        </div>
+
+        <div class="au-team-card" data-team-index="5">
+          <div class="au-team-img-wrap">
+            <img src="/assets/pexels-abner-velazquez-1035709527-35322891.jpg" alt="Creative Thinking" class="au-team-img" />
+            <div class="au-team-img-overlay"></div>
+          </div>
+          <div class="au-team-info">
+            <h3 class="au-team-name">Creative Thinking</h3>
+            <p class="au-team-role">Stand Out Always</p>
+            <p class="au-team-vibe">We push boundaries with bold ideas that make your brand impossible to ignore in a crowded market.</p>
+          </div>
+        </div>
+
+        <div class="au-team-card" data-team-index="6">
+          <div class="au-team-img-wrap">
+            <img src="/assets/pexels-abbaphe-media-669214747-18021924.jpg" alt="Speed & Execution" class="au-team-img" />
+            <div class="au-team-img-overlay"></div>
+          </div>
+          <div class="au-team-info">
+            <h3 class="au-team-name">Speed & Execution</h3>
+            <p class="au-team-role">Fast, But Focused</p>
+            <p class="au-team-vibe">We move fast without compromising quality — turning ideas into execution before opportunities fade.</p>
+          </div>
+        </div>
+
+        <div class="au-team-card" data-team-index="7">
+          <div class="au-team-img-wrap">
+            <img src="/assets/pexels-kaya-748456158-32267578.jpg" alt="Client Partnership" class="au-team-img" />
+            <div class="au-team-img-overlay"></div>
+          </div>
+          <div class="au-team-info">
+            <h3 class="au-team-name">Client Partnership</h3>
+            <p class="au-team-role">We Grow Together</p>
+            <p class="au-team-vibe">We don’t work for you — we work with you. Your growth becomes our shared mission.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- CLIENTS -->
+<section class="clients-scroll-section nx-sec">
+
+  <div class="clients-header">
+    <h1 class="clients-title">
+      Working With the <span>Best Clients</span> and Partners
+    </h1>
+    <p class="clients-subtitle">
+      We collaborate with industry leaders to create impactful digital experiences and drive measurable growth.
+    </p>
+  </div>
+
+  <div class="clients-scroll-wrapper">
+
+    <div class="clients-left">
+      <img class="client-img active" src="assets/elite.png" />
+      <img class="client-img" src="assets/hp.avif" />
+      <img class="client-img" src="assets/noah.png" />
+    </div>
+
+    <div class="clients-right">
+
+      <div class="client-item active">
+        <h2>Elite Martial Arts Academy</h2>
+        <p class="client-desc">
+          We helped them scale their business with growth strategies, branding, and performance campaigns.
+        </p>
+        <div class="client-extra">
+          <div><span>Services:</span> Branding, Funnels, Paid Ads</div>
+          <div><span>Focus:</span> Local Growth & Lead Generation</div>
+          <div><span>Impact:</span> Consistent Student Enrollments</div>
+        </div>
+      </div>
+
+      <div class="client-item">
+        <h2>Hewlett Packard Enterprise</h2>
+        <p class="client-desc">
+          Delivered high-quality video editing and creative production to elevate their digital presence.
+        </p>
+        <div class="client-extra">
+          <div><span>Services:</span> Video Production, Motion Graphics</div>
+          <div><span>Focus:</span> Brand Storytelling & Visual Content</div>
+          <div><span>Impact:</span> Improved Engagement & Brand Recall</div>
+        </div>
+      </div>
+
+      <div class="client-item">
+        <h2>Noah Arch Events</h2>
+        <p class="client-desc">
+          Built their website and content ecosystem to attract premium clients and increase conversions.
+        </p>
+        <div class="client-extra">
+          <div><span>Services:</span> Website Design, Content Strategy</div>
+          <div><span>Focus:</span> Premium Branding Experience</div>
+          <div><span>Impact:</span> High-Value Client Inquiries</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ==============================
+     BLOGS SECTION
+     Add this after the about-section
+============================== -->
+<section class="blogs-section nx-sec overlap-section" id="section-blogs">
+
+  <!-- Ambient background glows -->
+  <div class="blogs-bg-glow glow-1"></div>
+  <div class="blogs-bg-glow glow-2"></div>
+  <div class="blogs-bg-glow glow-3"></div>
+
+  <!-- Floating noise grain overlay -->
+  <div class="blogs-grain"></div>
+    <!-- ── HEADER ── -->
+  <div class="blogs-header" id="blogs-header">
+    <p class="blogs-eyebrow">OUR JOURNAL</p>
+    <h2 class="blogs-title">
+      <span class="blogs-title-line" data-line="1">Fresh</span>
+      <span class="blogs-title-line" data-line="2">Ideas<span class="blogs-title-dot">.</span></span>
+    </h2>
+    <p class="blogs-subtitle">
+      Thoughts, trends & creative fuel — straight from the Tripple studio.
+    </p>
+  </div>
+
+
+  <!-- ── FEATURED (LARGE) BLOG CARD ── -->
+  <div class="blogs-featured-wrap" id="blogs-featured">
+    <article class="blog-featured-card">
+      <div class="blog-featured-img-wrap">
+        <img src="/assets/Brand.png" alt="Featured Blog" class="blog-featured-img" />
+        <div class="blog-featured-img-overlay"></div>
+        <span class="blog-tag">Branding</span>
+      </div>
+      <div class="blog-featured-content">
+        <p class="blog-meta">Jan 12, 2026 &nbsp;·&nbsp; 6 min read</p>
+        <h3 class="blog-featured-title">Why Your Brand Needs a Story, Not Just a Logo</h3>
+        <p class="blog-featured-excerpt">
+          Most brands stop at the visual — a slick logo, a nice palette. But what separates forgettable from unforgettable is a narrative people want to be part of.
+        </p>
+        <a href="#" class="blog-read-more">
+          <span>Read Article</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </article>
+  </div>
+
+  <!-- ── BLOG CARDS GRID ── -->
+  <div class="blogs-grid-wrap">
+    <div class="blogs-grid" id="blogs-grid">
+
+      <article class="blog-card" data-blog-index="0">
+        <div class="blog-card-img-wrap">
+          <img src="/assets/blog1.png" alt="Blog" class="blog-card-img" />
+          <div class="blog-card-img-overlay"></div>
+          <span class="blog-tag">Growth</span>
+        </div>
+        <div class="blog-card-body">
+          <p class="blog-meta">Jan 28, 2026 &nbsp;·&nbsp; 4 min read</p>
+          <h3 class="blog-card-title">5 Funnels That Quietly Print Money While You Sleep</h3>
+          <p class="blog-card-excerpt">Automation isn't the future — it's the present. Here's how smart funnels turn cold leads into loyal buyers on autopilot.</p>
+          <a href="#" class="blog-read-more">Read <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </article>
+
+      <article class="blog-card" data-blog-index="1">
+        <div class="blog-card-img-wrap">
+          <img src="/assets/blog2.png" alt="Blog" class="blog-card-img" />
+          <div class="blog-card-img-overlay"></div>
+          <span class="blog-tag">Design</span>
+        </div>
+        <div class="blog-card-body">
+          <p class="blog-meta">Fed 14, 2026 &nbsp;·&nbsp; 5 min read</p>
+          <h3 class="blog-card-title">The Ugly Truth About Why Clients Ghost Your Proposals</h3>
+          <p class="blog-card-excerpt">It's rarely the price. More often, it's the story — or the lack of one. Here's how to fix your pitch deck for good.</p>
+          <a href="#" class="blog-read-more">Read <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </article>
+
+      <article class="blog-card" data-blog-index="2">
+        <div class="blog-card-img-wrap">
+          <img src="/assets/blog3.png" alt="Blog" class="blog-card-img" />
+          <div class="blog-card-img-overlay"></div>
+          <span class="blog-tag">Content</span>
+        </div>
+        <div class="blog-card-body">
+          <p class="blog-meta">Feb 27, 2026 &nbsp;·&nbsp; 3 min read</p>
+          <h3 class="blog-card-title">Short-Form vs Long-Form: Which Content Actually Converts?</h3>
+          <p class="blog-card-excerpt">Everyone's debating video length. We ran the numbers across 14 client accounts — here's what the data actually says.</p>
+          <a href="#" class="blog-read-more">Read <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </article>
+
+      <article class="blog-card" data-blog-index="3">
+        <div class="blog-card-img-wrap">
+          <img src="/assets/blog4.png" alt="Blog" class="blog-card-img" />
+          <div class="blog-card-img-overlay"></div>
+          <span class="blog-tag">Marketing</span>
+        </div>
+        <div class="blog-card-body">
+          <p class="blog-meta">Mar 10, 2026 &nbsp;·&nbsp; 7 min read</p>
+          <h3 class="blog-card-title">Local SEO in 2026: The Playbook Nobody's Talking About</h3>
+          <p class="blog-card-excerpt">Google's algorithm shifted again. Here's the updated local SEO strategy helping our clients dominate their city searches.</p>
+          <a href="#" class="blog-read-more">Read <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+
+  <!-- ── HORIZONTAL SCROLL STRIP (QUOTE CARDS) ── -->
+  <div class="blogs-strip-wrap" id="blogs-strip">
+    <div class="blogs-strip-label">QUICK READS</div>
+    <div class="blogs-strip">
+
+      <div class="blog-strip-card">
+        <span class="strip-card-num">01</span>
+        <p class="strip-card-text">"Your content calendar is a reflection of your strategy — if it's empty, your strategy is empty."</p>
+        <span class="strip-card-cat">Content</span>
+      </div>
+
+      <div class="blog-strip-card">
+        <span class="strip-card-num">02</span>
+        <p class="strip-card-text">"Stop chasing followers. Start building a community that actually buys from you."</p>
+        <span class="strip-card-cat">Social Media</span>
+      </div>
+
+      <div class="blog-strip-card">
+        <span class="strip-card-num">03</span>
+        <p class="strip-card-text">"A website without conversion copy is just an expensive online brochure."</p>
+        <span class="strip-card-cat">Web</span>
+      </div>
+
+      <div class="blog-strip-card">
+        <span class="strip-card-num">04</span>
+        <p class="strip-card-text">"The brands winning in 2026 aren't the loudest — they're the most consistent."</p>
+        <span class="strip-card-cat">Branding</span>
+      </div>
+
+      <div class="blog-strip-card">
+        <span class="strip-card-num">05</span>
+        <p class="strip-card-text">"Paid ads amplify what's already working. If organic fails, ads will too."</p>
+        <span class="strip-card-cat">Ads</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── CTA ── -->
+  <div class="blogs-cta-wrap" id="blogs-cta">
+    <p class="blogs-cta-label">MORE STORIES</p>
+  </div>
+
+</section>
+<!-- END BLOGS SECTION -->
+
+<section>
+  <!-- ══════════════════════════════
+       BLOCK 7 — CLOSING CTA BANNER
+  ══════════════════════════════ -->
+  <div class="au-cta-banner" id="au-cta">
+    <div class="au-cta-glow"></div>
+    <div class="au-cta-line au-cta-line-top"></div>
+    <div class="au-cta-line au-cta-line-bottom"></div>
+
+    <div class="au-container au-cta-inner">
+      <p class="au-eyebrow">READY?</p>
+
+      <h2 class="au-cta-heading">
+        Let's build something<br>
+        <span class="au-cta-highlight">the world remembers.</span>
+      </h2>
+
+      <div class="au-cta-actions">
+        <a href="javascript:void(0)" class="au-cta-primary" id="auOpenModal">
+          Connect With Us
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MODAL ================= -->
+<div class="au-modal-overlay" id="auModal">
+  <div class="au-modal-box">
+
+    <!-- CLOSE -->
+    <button class="au-modal-close" id="auCloseModal">&times;</button>
+
+    <h3 class="au-modal-title">Connect With Us</h3>
+    <p class="au-modal-sub">Tell us about your project</p>
+
+    <form class="au-modal-form">
+      <div class="au-form-group">
+        <input type="text" placeholder="Your Name" required>
+      </div>
+
+      <div class="au-form-group">
+        <input type="email" placeholder="Your Email" required>
+      </div>
+
+      <div class="au-form-group">
+        <textarea rows="4" placeholder="Your Message" required></textarea>
+      </div>
+
+      <button type="submit" class="au-form-submit">
+        Send Message
+      </button>
+    </form>
+
+  </div>
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+<script src="js/script.js"></script>
+
+
+<!-- ================= NX FOOTER ================= -->
+<footer class="nx-footer">
+
+  <!-- MAIN FOOTER -->
+  <div class="nx-footer-main">
+
+    <div class="nx-footer-container">
+
+      <!-- LEFT -->
+      <div class="nx-footer-col nx-footer-brand">
+        <h3 class="nx-footer-logo">TheTripple</h3>
+
+        <p class="nx-footer-text">
+          3940 Sorrento Digital Way<br>
+          Bangalore, India
+        </p>
+
+        <div class="nx-footer-contact">
+          <p>+1 800 200 900</p>
+          <p>support@TheTripple.com</p>
+        </div>
+      </div>
+
+      <!-- LINKS -->
+      <div class="nx-footer-col nx-footer-links">
+
+        <div class="nx-footer-group">
+          <h4>Quick Links</h4>
+          <a href="#">Pricing</a>
+          <a href="#">Resources</a>
+          <a href="#">About Us</a>
+          <a href="#">API</a>
+        </div>
+
+        <div class="nx-footer-group">
+          <h4>Social</h4>
+          <a href="#">Instagram</a>
+          <a href="#">LinkedIn</a>
+          <a href="#">Twitter</a>
+          <a href="#">YouTube</a>
+        </div>
+
+        <div class="nx-footer-group">
+          <h4>Legal</h4>
+          <a href="#">Terms</a>
+          <a href="#">Privacy</a>
+          <a href="#">Cookies</a>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="nx-footer-bottom">
+      © 2026 BoomerTechnologies. All rights reserved.
+    </div>
+
+  </div>
+
+</footer>
+</body>
+</html>
