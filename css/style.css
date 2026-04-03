@@ -776,15 +776,6 @@
   overflow: hidden;
 }
 
-/* BACKGROUND IMAGE */
-.about-bg {
-  position: absolute;
-  inset: 0;
-  background: url("/assets/about-bg.jpg") no-repeat center/cover;
-  opacity: 0.25;
-  z-index: 0;
-}
-
 /* DARK OVERLAY */
 .about-section::after {
   content: "";
