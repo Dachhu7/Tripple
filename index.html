@@ -2,83 +2,109 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>TheTripple</title>
+
+  <!-- Preconnect for fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- OPTIMIZATION: font-display=swap prevents render-blocking -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <!-- GSAP -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="css/style.css">
+  <!-- Site CSS -->
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
 
-<nav class="navbar fixed-top">
-  <div class="container d-flex justify-content-between">
+<!-- NAVBAR -->
+<nav class="navbar fixed-top" id="navbar">
+  <div class="container d-flex justify-content-between align-items-center">
     <h2 class="logo">TheTripple</h2>
-    <div class="menu">Menu</div>
+    <div class="menu" role="button" tabindex="0" aria-label="Open menu">Menu</div>
   </div>
 </nav>
 
-<!-- HERO -->
+<!-- ═══════════════════════════════════
+     HERO
+═══════════════════════════════════ -->
 <section class="hero nx-sec">
-  
-  <video autoplay muted loop class="hero-video">
+
+  <video autoplay muted loop playsinline class="hero-video" aria-hidden="true">
     <source src="assets/video.mp4" type="video/mp4">
   </video>
 
-  <div class="overlay"></div>
+  <div class="overlay" aria-hidden="true"></div>
 
-  <div class="hero-image" id="astronaut">
-    <img src="assets/astronaut.png" alt="astronaut">
+  <div class="hero-image" id="astronaut" aria-hidden="true">
+    <img src="assets/astronaut.png" alt="" width="900" height="900" loading="eager">
   </div>
 
   <div class="hero-content">
+
     <h1 class="hero-text">
-      <span class="left">We Scale</span><br>
-      <span class="left">Your Business With</span><br>
-      <span class="right">Mad Creativity</span>
+      <span class="left outline">We Scale</span><br>
+      <span class="left outline">Your Business With</span><br>
+      <span class="right solid">Mad Creativity</span>
     </h1>
+
+    <div class="hero-cta">
+      <button class="cta-btn">
+        Let’s Build Together<br>
+        <span>Tripple's got you covered.</span>
+      </button>
+
+      <div class="scroll-down">
+        <span>Scroll Down</span>
+        <div class="scroll-line"></div>
+      </div>
+    </div>
+
+    <div class="hero-marquee">
+      <div class="marquee-track">
+        <span>We’re the vibe • The trend • The brains and the madness behind businesses that go from zero to sky-high •</span>
+        <span>We’re the vibe • The trend • The brains and the madness behind businesses that go from zero to sky-high •</span>
+      </div>
+    </div>
+
   </div>
 
 </section>
 
-<!-- ABOUT US SECTION -->
+<!-- ═══════════════════════════════════
+     ABOUT US
+═══════════════════════════════════ -->
 <section class="aboutus-section nx-sec overlap-section" id="section-aboutus">
 
-  <!-- STICKY WRAPPER -->
   <div class="aboutus-sticky-wrapper">
 
-    <!-- BACKGROUND -->
-    <div class="au-bg-base"></div>
-    <div class="au-grain"></div>
+    <div class="au-bg-base" aria-hidden="true"></div>
+    <div class="au-grain"   aria-hidden="true"></div>
 
-    <!-- ══════════════════════════════
-         BLOCK 1 — OPENING STATEMENT
-    ══════════════════════════════ -->
+    <!-- BLOCK 1 — OPENING -->
     <div class="au-opening" id="au-opening">
       <div class="au-container">
         <p class="au-eyebrow" id="au-eyebrow">ABOUT US</p>
 
         <div class="au-headline-wrap" id="au-headline-wrap">
           <h1 class="au-headline">
-            <span class="au-hl-line" data-delay="0">Meet</span>
+            <span class="au-hl-line"           data-delay="0">Meet</span>
             <span class="au-hl-line au-hl-accent" data-delay="1">Tripple.</span>
-            <span class="au-hl-line" data-delay="2">We make s</span>
+            <span class="au-hl-line"           data-delay="2">We make brands</span>
             <span class="au-hl-line au-hl-stroke" data-delay="3">blow up.</span>
           </h1>
         </div>
 
         <div class="au-opening-sub" id="au-opening-sub">
           <p>
-            Built for s that want to stand out, glow up, and blow up.
-            Tripple is a creative growth studio obsessed with making s look cool, grow fast, and feel unforgettable.
+            Built for brands that want to stand out, glow up, and blow up.
+            Tripple is a creative growth studio obsessed with making brands look cool, grow fast, and feel unforgettable.
           </p>
 
-          <div class="au-scroll-hint">
+          <div class="au-scroll-hint" aria-hidden="true">
             <span class="au-scroll-line"></span>
             <p>Scroll to explore</p>
           </div>
@@ -86,21 +112,20 @@
       </div>
     </div>
 
-    <!-- ══════════════════════════════
-         BLOCK 2 — MARQUEE DIVIDER
-    ══════════════════════════════ -->
-    <div class="au-marquee-divider" id="au-marquee">
+    <!-- BLOCK 2 — MARQUEE DIVIDER -->
+    <div class="au-marquee-divider" id="au-marquee" aria-hidden="true">
       <div class="au-marquee-track au-marquee-fwd">
         <span>Creative Studio</span><em>✦</em>
         <span>Bangalore</span><em>✦</em>
         <span>Growth Agency</span><em>✦</em>
-        <span> Builders</span><em>✦</em>
+        <span>Brand Builders</span><em>✦</em>
         <span>Visual Thinkers</span><em>✦</em>
         <span>Digital Natives</span><em>✦</em>
+        <!-- Duplicate for seamless loop -->
         <span>Creative Studio</span><em>✦</em>
         <span>Bangalore</span><em>✦</em>
         <span>Growth Agency</span><em>✦</em>
-        <span> Builders</span><em>✦</em>
+        <span>Brand Builders</span><em>✦</em>
         <span>Visual Thinkers</span><em>✦</em>
         <span>Digital Natives</span><em>✦</em>
       </div>
@@ -112,6 +137,7 @@
         <span>Obsessed Team</span><em>★</em>
         <span>Trend Chasers</span><em>★</em>
         <span>Vibe Setters</span><em>★</em>
+        <!-- Duplicate for seamless loop -->
         <span>Mad Creativity</span><em>★</em>
         <span>Bold Ideas</span><em>★</em>
         <span>Real Results</span><em>★</em>
@@ -121,9 +147,7 @@
       </div>
     </div>
 
-    <!-- ══════════════════════════════
-         BLOCK 3 — SPLIT STORY
-    ══════════════════════════════ -->
+    <!-- BLOCK 3 — SPLIT STORY -->
     <div class="au-split-story" id="au-split">
       <div class="au-container au-split-inner">
 
@@ -137,13 +161,13 @@
           <div class="au-split-img-stack">
 
             <div class="au-img-card au-img-card-back">
-              <video autoplay muted loop playsinline>
+              <video autoplay muted loop playsinline aria-hidden="true">
                 <source src="assets/about.mp4" type="video/mp4">
               </video>
             </div>
 
             <div class="au-img-card au-img-card-front">
-              <video autoplay muted loop playsinline>
+              <video autoplay muted loop playsinline aria-hidden="true">
                 <source src="assets/about.mp4" type="video/mp4">
               </video>
 
@@ -171,13 +195,13 @@
             <span class="au-story-index">02</span>
             <h2 class="au-story-heading">We built a team of obsessives.</h2>
             <p class="au-story-body">
-              Designers who lose sleep over kerning. Strategists who treat every  like it's their own.
+              Designers who lose sleep over kerning. Strategists who treat every brand like it's their own.
             </p>
           </div>
 
           <div class="au-story-block" id="au-story-2">
             <span class="au-story-index">03</span>
-            <h2 class="au-story-heading">Now we scale s for real.</h2>
+            <h2 class="au-story-heading">Now we scale brands for real.</h2>
             <p class="au-story-body">
               From identity to performance — we own every layer.
             </p>
@@ -192,11 +216,12 @@
 </section>
 
 
-
-<!-- SERVICES -->
+<!-- ═══════════════════════════════════
+     SERVICES
+═══════════════════════════════════ -->
 <section class="services-section nx-sec">
 
-  <video class="services-bg-video" autoplay muted loop playsinline>
+  <video class="services-bg-video" autoplay muted loop playsinline aria-hidden="true">
     <source src="assets/12638483_2088_720_60fps.mp4" type="video/mp4">
   </video>
 
@@ -205,28 +230,28 @@
     <h2 class="section-title">WHAT WE DO</h2>
     <p class="section-subtitle">Everything You Need!</p>
 
-  <!-- ── MARQUEE TICKER ── -->
-  <div class="blogs-ticker-wrap" id="blogs-ticker">
-    <div class="blogs-ticker-track">
-      <span>ing</span><span class="ticker-sep">✦</span>
-      <span>Web Design</span><span class="ticker-sep">✦</span>
-      <span>Content Strategy</span><span class="ticker-sep">✦</span>
-      <span>Growth Hacks</span><span class="ticker-sep">✦</span>
-      <span>Digital Marketing</span><span class="ticker-sep">✦</span>
-      <span>Creative Direction</span><span class="ticker-sep">✦</span>
-      <span>SEO & Ads</span><span class="ticker-sep">✦</span>
-      <span>Visual Identity</span><span class="ticker-sep">✦</span>
-      <!-- duplicate for seamless loop -->
-      <span>Branding</span><span class="ticker-sep">✦</span>
-      <span>Web Design</span><span class="ticker-sep">✦</span>
-      <span>Content Strategy</span><span class="ticker-sep">✦</span>
-      <span>Growth Hacks</span><span class="ticker-sep">✦</span>
-      <span>Digital Marketing</span><span class="ticker-sep">✦</span>
-      <span>Creative Direction</span><span class="ticker-sep">✦</span>
-      <span>SEO & Ads</span><span class="ticker-sep">✦</span>
-      <span>Visual Identity</span><span class="ticker-sep">✦</span>
+    <!-- MARQUEE TICKER -->
+    <div class="blogs-ticker-wrap" id="blogs-ticker" aria-hidden="true">
+      <div class="blogs-ticker-track">
+        <span>Branding</span><span class="ticker-sep">✦</span>
+        <span>Web Design</span><span class="ticker-sep">✦</span>
+        <span>Content Strategy</span><span class="ticker-sep">✦</span>
+        <span>Growth Hacks</span><span class="ticker-sep">✦</span>
+        <span>Digital Marketing</span><span class="ticker-sep">✦</span>
+        <span>Creative Direction</span><span class="ticker-sep">✦</span>
+        <span>SEO &amp; Ads</span><span class="ticker-sep">✦</span>
+        <span>Visual Identity</span><span class="ticker-sep">✦</span>
+        <!-- Duplicate for seamless loop -->
+        <span>Branding</span><span class="ticker-sep">✦</span>
+        <span>Web Design</span><span class="ticker-sep">✦</span>
+        <span>Content Strategy</span><span class="ticker-sep">✦</span>
+        <span>Growth Hacks</span><span class="ticker-sep">✦</span>
+        <span>Digital Marketing</span><span class="ticker-sep">✦</span>
+        <span>Creative Direction</span><span class="ticker-sep">✦</span>
+        <span>SEO &amp; Ads</span><span class="ticker-sep">✦</span>
+        <span>Visual Identity</span><span class="ticker-sep">✦</span>
+      </div>
     </div>
-  </div>
 
     <div class="services-scroll-wrapper">
       <div class="services-grid">
@@ -242,7 +267,7 @@
         </div>
 
         <div class="card" style="background-image:url('assets/design.jpg')">
-          <h3>Posters & Designs</h3>
+          <h3>Posters &amp; Designs</h3>
           <p>Visually stunning creatives that capture attention instantly.</p>
         </div>
 
@@ -251,17 +276,17 @@
           <p>We manage your brand presence with strategy and daily engagement.</p>
         </div>
 
-        <div class="card" style="background-image:url('assets/Video\ &\ Photoshoots.jpg')">
-          <h3>Video & Photoshoots</h3>
+        <div class="card" style="background-image:url('assets/Video%20%26%20Photoshoots.jpg')">
+          <h3>Video &amp; Photoshoots</h3>
           <p>Professional shoots and cinematic edits for powerful storytelling.</p>
         </div>
 
-        <div class="card" style="background-image:url('assets/Digital\ Marketing.jpg')">
+        <div class="card" style="background-image:url('assets/Digital%20Marketing.jpg')">
           <h3>Digital Marketing</h3>
-          <p>SEO, ads & campaigns to boost visibility and maximize ROI.</p>
+          <p>SEO, ads &amp; campaigns to boost visibility and maximize ROI.</p>
         </div>
 
-        <div class="card" style="background-image:url('assets/Growth\ Strategies.jpg')">
+        <div class="card" style="background-image:url('assets/Growth%20Strategies.jpg')">
           <h3>Growth Strategies</h3>
           <p>Smart strategies designed for long-term business success.</p>
         </div>
@@ -278,7 +303,7 @@
 
         <div class="card highlight" style="background-image:url('assets/Clubhouses.jpg')">
           <h3>Coming Soon</h3>
-          <p>Clubhouses & unique spaces are on the way.</p>
+          <p>Clubhouses &amp; unique spaces are on the way.</p>
         </div>
 
       </div>
@@ -288,10 +313,10 @@
 </section>
 
 
+<!-- ═══════════════════════════════════
+     HOW WE WORK — CAPABILITIES STRIP
+═══════════════════════════════════ -->
 <section>
-  <!-- ══════════════════════════════
-       BLOCK 6 — CAPABILITIES STRIP
-  ══════════════════════════════ -->
   <div class="au-team-wrap" id="au-team">
     <div class="au-container">
       <div class="au-team-header">
@@ -303,20 +328,20 @@
 
         <div class="au-team-card" data-team-index="0">
           <div class="au-team-img-wrap">
-            <img src="assets/pexels-sasha-kim-9413785.jpg" alt="Strategy First" class="au-team-img" />
-            <div class="au-team-img-overlay"></div>
+            <img src="assets/pexels-sasha-kim-9413785.jpg" alt="Strategy First" class="au-team-img" loading="lazy" width="400" height="240">
+            <div class="au-team-img-overlay" aria-hidden="true"></div>
           </div>
           <div class="au-team-info">
             <h3 class="au-team-name">Strategy First</h3>
             <p class="au-team-role">Foundation Before Execution</p>
-            <p class="au-team-vibe">We don’t jump into execution. Every move is backed by clear strategy, ensuring your brand grows with direction, not guesswork.</p>
+            <p class="au-team-vibe">We don't jump into execution. Every move is backed by clear strategy, ensuring your brand grows with direction, not guesswork.</p>
           </div>
         </div>
 
         <div class="au-team-card" data-team-index="1">
           <div class="au-team-img-wrap">
-            <img src="assets/pexels-ron-lach-7801147.jpg" alt="Design That Converts" class="au-team-img" />
-            <div class="au-team-img-overlay"></div>
+            <img src="assets/pexels-ron-lach-7801147.jpg" alt="Design That Converts" class="au-team-img" loading="lazy" width="400" height="240">
+            <div class="au-team-img-overlay" aria-hidden="true"></div>
           </div>
           <div class="au-team-info">
             <h3 class="au-team-name">Design That Converts</h3>
@@ -327,8 +352,8 @@
 
         <div class="au-team-card" data-team-index="2">
           <div class="au-team-img-wrap">
-            <img src="assets/pexels-rdne-7580753.jpg" alt="Content With Intent" class="au-team-img" />
-            <div class="au-team-img-overlay"></div>
+            <img src="assets/pexels-rdne-7580753.jpg" alt="Content With Intent" class="au-team-img" loading="lazy" width="400" height="240">
+            <div class="au-team-img-overlay" aria-hidden="true"></div>
           </div>
           <div class="au-team-info">
             <h3 class="au-team-name">Content With Intent</h3>
@@ -339,8 +364,8 @@
 
         <div class="au-team-card" data-team-index="3">
           <div class="au-team-img-wrap">
-            <img src="assets/pexels-jason-dam-3920540-7020105.jpg" alt="Data Driven" class="au-team-img" />
-            <div class="au-team-img-overlay"></div>
+            <img src="assets/pexels-jason-dam-3920540-7020105.jpg" alt="Data Driven" class="au-team-img" loading="lazy" width="400" height="240">
+            <div class="au-team-img-overlay" aria-hidden="true"></div>
           </div>
           <div class="au-team-info">
             <h3 class="au-team-name">Data Driven Decisions</h3>
@@ -351,20 +376,20 @@
 
         <div class="au-team-card" data-team-index="4">
           <div class="au-team-img-wrap">
-            <img src="assets/pexels-artempodrez-5715852.jpg" alt="Consistency Wins" class="au-team-img" />
-            <div class="au-team-img-overlay"></div>
+            <img src="assets/pexels-artempodrez-5715852.jpg" alt="Consistency Wins" class="au-team-img" loading="lazy" width="400" height="240">
+            <div class="au-team-img-overlay" aria-hidden="true"></div>
           </div>
           <div class="au-team-info">
             <h3 class="au-team-name">Consistency Wins</h3>
             <p class="au-team-role">Long-Term Growth</p>
-            <p class="au-team-vibe">We believe growth isn’t a one-time spike — it’s built through consistent execution and continuous improvement.</p>
+            <p class="au-team-vibe">We believe growth isn't a one-time spike — it's built through consistent execution and continuous improvement.</p>
           </div>
         </div>
 
         <div class="au-team-card" data-team-index="5">
           <div class="au-team-img-wrap">
-            <img src="assets/pexels-abner-velazquez-1035709527-35322891.jpg" alt="Creative Thinking" class="au-team-img" />
-            <div class="au-team-img-overlay"></div>
+            <img src="assets/pexels-abner-velazquez-1035709527-35322891.jpg" alt="Creative Thinking" class="au-team-img" loading="lazy" width="400" height="240">
+            <div class="au-team-img-overlay" aria-hidden="true"></div>
           </div>
           <div class="au-team-info">
             <h3 class="au-team-name">Creative Thinking</h3>
@@ -375,11 +400,11 @@
 
         <div class="au-team-card" data-team-index="6">
           <div class="au-team-img-wrap">
-            <img src="assets/pexels-abbaphe-media-669214747-18021924.jpg" alt="Speed & Execution" class="au-team-img" />
-            <div class="au-team-img-overlay"></div>
+            <img src="assets/pexels-abbaphe-media-669214747-18021924.jpg" alt="Speed &amp; Execution" class="au-team-img" loading="lazy" width="400" height="240">
+            <div class="au-team-img-overlay" aria-hidden="true"></div>
           </div>
           <div class="au-team-info">
-            <h3 class="au-team-name">Speed & Execution</h3>
+            <h3 class="au-team-name">Speed &amp; Execution</h3>
             <p class="au-team-role">Fast, But Focused</p>
             <p class="au-team-vibe">We move fast without compromising quality — turning ideas into execution before opportunities fade.</p>
           </div>
@@ -387,13 +412,13 @@
 
         <div class="au-team-card" data-team-index="7">
           <div class="au-team-img-wrap">
-            <img src="assets/pexels-kaya-748456158-32267578.jpg" alt="Client Partnership" class="au-team-img" />
-            <div class="au-team-img-overlay"></div>
+            <img src="assets/pexels-kaya-748456158-32267578.jpg" alt="Client Partnership" class="au-team-img" loading="lazy" width="400" height="240">
+            <div class="au-team-img-overlay" aria-hidden="true"></div>
           </div>
           <div class="au-team-info">
             <h3 class="au-team-name">Client Partnership</h3>
             <p class="au-team-role">We Grow Together</p>
-            <p class="au-team-vibe">We don’t work for you — we work with you. Your growth becomes our shared mission.</p>
+            <p class="au-team-vibe">We don't work for you — we work with you. Your growth becomes our shared mission.</p>
           </div>
         </div>
 
@@ -403,7 +428,9 @@
 </section>
 
 
-<!-- CLIENTS -->
+<!-- ═══════════════════════════════════
+     CLIENTS
+═══════════════════════════════════ -->
 <section class="clients-scroll-section nx-sec">
 
   <div class="clients-header">
@@ -418,9 +445,9 @@
   <div class="clients-scroll-wrapper">
 
     <div class="clients-left">
-      <img class="client-img active" src="assets/Elite.png" />
-      <img class="client-img" src="assets/hp.avif" />
-      <img class="client-img" src="assets/noah.png" />
+      <img class="client-img active" src="assets/Elite.png"   alt="Elite Martial Arts Academy" loading="lazy">
+      <img class="client-img"        src="assets/hp.avif"     alt="Hewlett Packard Enterprise" loading="lazy">
+      <img class="client-img"        src="assets/noah.png"    alt="Noah Arch Events"           loading="lazy">
     </div>
 
     <div class="clients-right">
@@ -432,7 +459,7 @@
         </p>
         <div class="client-extra">
           <div><span>Services:</span> Branding, Funnels, Paid Ads</div>
-          <div><span>Focus:</span> Local Growth & Lead Generation</div>
+          <div><span>Focus:</span> Local Growth &amp; Lead Generation</div>
           <div><span>Impact:</span> Consistent Student Enrollments</div>
         </div>
       </div>
@@ -444,8 +471,8 @@
         </p>
         <div class="client-extra">
           <div><span>Services:</span> Video Production, Motion Graphics</div>
-          <div><span>Focus:</span> Brand Storytelling & Visual Content</div>
-          <div><span>Impact:</span> Improved Engagement & Brand Recall</div>
+          <div><span>Focus:</span> Brand Storytelling &amp; Visual Content</div>
+          <div><span>Impact:</span> Improved Engagement &amp; Brand Recall</div>
         </div>
       </div>
 
@@ -468,20 +495,18 @@
 </section>
 
 
-<!-- ==============================
-     BLOGS SECTION
-     Add this after the about-section
-============================== -->
+<!-- ═══════════════════════════════════
+     BLOGS
+═══════════════════════════════════ -->
 <section class="blogs-section nx-sec overlap-section" id="section-blogs">
 
-  <!-- Ambient background glows -->
-  <div class="blogs-bg-glow glow-1"></div>
-  <div class="blogs-bg-glow glow-2"></div>
-  <div class="blogs-bg-glow glow-3"></div>
+  <!-- Ambient background glows — aria-hidden: decorative only -->
+  <div class="blogs-bg-glow glow-1" aria-hidden="true"></div>
+  <div class="blogs-bg-glow glow-2" aria-hidden="true"></div>
+  <div class="blogs-bg-glow glow-3" aria-hidden="true"></div>
+  <div class="blogs-grain"          aria-hidden="true"></div>
 
-  <!-- Floating noise grain overlay -->
-  <div class="blogs-grain"></div>
-    <!-- ── HEADER ── -->
+  <!-- HEADER -->
   <div class="blogs-header" id="blogs-header">
     <p class="blogs-eyebrow">OUR JOURNAL</p>
     <h2 class="blogs-title">
@@ -489,17 +514,16 @@
       <span class="blogs-title-line" data-line="2">Ideas<span class="blogs-title-dot">.</span></span>
     </h2>
     <p class="blogs-subtitle">
-      Thoughts, trends & creative fuel — straight from the Tripple studio.
+      Thoughts, trends &amp; creative fuel — straight from the Tripple studio.
     </p>
   </div>
 
-
-  <!-- ── FEATURED (LARGE) BLOG CARD ── -->
+  <!-- FEATURED BLOG CARD -->
   <div class="blogs-featured-wrap" id="blogs-featured">
     <article class="blog-featured-card">
       <div class="blog-featured-img-wrap">
-        <img src="assets/brand.png" alt="Featured Blog" class="blog-featured-img" />
-        <div class="blog-featured-img-overlay"></div>
+        <img src="assets/brand.png" alt="Why Your Brand Needs a Story" class="blog-featured-img" loading="lazy">
+        <div class="blog-featured-img-overlay" aria-hidden="true"></div>
         <span class="blog-tag">Branding</span>
       </div>
       <div class="blog-featured-content">
@@ -510,76 +534,76 @@
         </p>
         <a href="#" class="blog-read-more">
           <span>Read Article</span>
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
       </div>
     </article>
   </div>
 
-  <!-- ── BLOG CARDS GRID ── -->
+  <!-- BLOG CARDS GRID -->
   <div class="blogs-grid-wrap">
     <div class="blogs-grid" id="blogs-grid">
 
       <article class="blog-card" data-blog-index="0">
         <div class="blog-card-img-wrap">
-          <img src="assets/blog1.png" alt="Blog" class="blog-card-img" />
-          <div class="blog-card-img-overlay"></div>
+          <img src="assets/blog1.png" alt="5 Funnels That Quietly Print Money" class="blog-card-img" loading="lazy">
+          <div class="blog-card-img-overlay" aria-hidden="true"></div>
           <span class="blog-tag">Growth</span>
         </div>
         <div class="blog-card-body">
           <p class="blog-meta">Jan 28, 2026 &nbsp;·&nbsp; 4 min read</p>
           <h3 class="blog-card-title">5 Funnels That Quietly Print Money While You Sleep</h3>
           <p class="blog-card-excerpt">Automation isn't the future — it's the present. Here's how smart funnels turn cold leads into loyal buyers on autopilot.</p>
-          <a href="#" class="blog-read-more">Read <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <a href="#" class="blog-read-more">Read <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         </div>
       </article>
 
       <article class="blog-card" data-blog-index="1">
         <div class="blog-card-img-wrap">
-          <img src="assets/blog2.png" alt="Blog" class="blog-card-img" />
-          <div class="blog-card-img-overlay"></div>
+          <img src="assets/blog2.png" alt="Why Clients Ghost Your Proposals" class="blog-card-img" loading="lazy">
+          <div class="blog-card-img-overlay" aria-hidden="true"></div>
           <span class="blog-tag">Design</span>
         </div>
         <div class="blog-card-body">
-          <p class="blog-meta">Fed 14, 2026 &nbsp;·&nbsp; 5 min read</p>
+          <p class="blog-meta">Feb 14, 2026 &nbsp;·&nbsp; 5 min read</p>
           <h3 class="blog-card-title">The Ugly Truth About Why Clients Ghost Your Proposals</h3>
           <p class="blog-card-excerpt">It's rarely the price. More often, it's the story — or the lack of one. Here's how to fix your pitch deck for good.</p>
-          <a href="#" class="blog-read-more">Read <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <a href="#" class="blog-read-more">Read <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         </div>
       </article>
 
       <article class="blog-card" data-blog-index="2">
         <div class="blog-card-img-wrap">
-          <img src="assets/blog3.png" alt="Blog" class="blog-card-img" />
-          <div class="blog-card-img-overlay"></div>
+          <img src="assets/blog3.png" alt="Short-Form vs Long-Form Content" class="blog-card-img" loading="lazy">
+          <div class="blog-card-img-overlay" aria-hidden="true"></div>
           <span class="blog-tag">Content</span>
         </div>
         <div class="blog-card-body">
           <p class="blog-meta">Feb 27, 2026 &nbsp;·&nbsp; 3 min read</p>
           <h3 class="blog-card-title">Short-Form vs Long-Form: Which Content Actually Converts?</h3>
           <p class="blog-card-excerpt">Everyone's debating video length. We ran the numbers across 14 client accounts — here's what the data actually says.</p>
-          <a href="#" class="blog-read-more">Read <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <a href="#" class="blog-read-more">Read <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         </div>
       </article>
 
       <article class="blog-card" data-blog-index="3">
         <div class="blog-card-img-wrap">
-          <img src="assets/blog4.png" alt="Blog" class="blog-card-img" />
-          <div class="blog-card-img-overlay"></div>
+          <img src="assets/blog4.png" alt="Local SEO in 2026" class="blog-card-img" loading="lazy">
+          <div class="blog-card-img-overlay" aria-hidden="true"></div>
           <span class="blog-tag">Marketing</span>
         </div>
         <div class="blog-card-body">
           <p class="blog-meta">Mar 10, 2026 &nbsp;·&nbsp; 7 min read</p>
           <h3 class="blog-card-title">Local SEO in 2026: The Playbook Nobody's Talking About</h3>
           <p class="blog-card-excerpt">Google's algorithm shifted again. Here's the updated local SEO strategy helping our clients dominate their city searches.</p>
-          <a href="#" class="blog-read-more">Read <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <a href="#" class="blog-read-more">Read <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         </div>
       </article>
 
     </div>
   </div>
 
-  <!-- ── HORIZONTAL SCROLL STRIP (QUOTE CARDS) ── -->
+  <!-- HORIZONTAL SCROLL STRIP (QUOTE CARDS) -->
   <div class="blogs-strip-wrap" id="blogs-strip">
     <div class="blogs-strip-label">QUICK READS</div>
     <div class="blogs-strip">
@@ -617,22 +641,22 @@
     </div>
   </div>
 
-  <!-- ── CTA ── -->
+  <!-- CTA -->
   <div class="blogs-cta-wrap" id="blogs-cta">
     <p class="blogs-cta-label">MORE STORIES</p>
   </div>
 
 </section>
-<!-- END BLOGS SECTION -->
 
+
+<!-- ═══════════════════════════════════
+     CLOSING CTA BANNER
+═══════════════════════════════════ -->
 <section>
-  <!-- ══════════════════════════════
-       BLOCK 7 — CLOSING CTA BANNER
-  ══════════════════════════════ -->
   <div class="au-cta-banner" id="au-cta">
-    <div class="au-cta-glow"></div>
-    <div class="au-cta-line au-cta-line-top"></div>
-    <div class="au-cta-line au-cta-line-bottom"></div>
+    <div class="au-cta-glow"        aria-hidden="true"></div>
+    <div class="au-cta-line au-cta-line-top"    aria-hidden="true"></div>
+    <div class="au-cta-line au-cta-line-bottom" aria-hidden="true"></div>
 
     <div class="au-container au-cta-inner">
       <p class="au-eyebrow">READY?</p>
@@ -651,23 +675,25 @@
   </div>
 </section>
 
-<!-- ================= MODAL ================= -->
-<div class="au-modal-overlay" id="auModal">
+
+<!-- ═══════════════════════════════════
+     CONTACT MODAL
+═══════════════════════════════════ -->
+<div class="au-modal-overlay" id="auModal" role="dialog" aria-modal="true" aria-labelledby="auModalTitle">
   <div class="au-modal-box">
 
-    <!-- CLOSE -->
-    <button class="au-modal-close" id="auCloseModal">&times;</button>
+    <button class="au-modal-close" id="auCloseModal" aria-label="Close modal">&times;</button>
 
-    <h3 class="au-modal-title">Connect With Us</h3>
+    <h3 class="au-modal-title" id="auModalTitle">Connect With Us</h3>
     <p class="au-modal-sub">Tell us about your project</p>
 
-    <form class="au-modal-form">
+    <form class="au-modal-form" novalidate>
       <div class="au-form-group">
-        <input type="text" placeholder="Your Name" required>
+        <input type="text" placeholder="Your Name" required autocomplete="name">
       </div>
 
       <div class="au-form-group">
-        <input type="email" placeholder="Your Email" required>
+        <input type="email" placeholder="Your Email" required autocomplete="email">
       </div>
 
       <div class="au-form-group">
@@ -683,21 +709,24 @@
 </div>
 
 
+<!-- ═══════════════════════════════════
+     GSAP — loaded at bottom, deferred
+═══════════════════════════════════ -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js" defer></script>
+<script src="/js/script.js" defer></script>
 
-<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
-<script src="js/script.js"></script>
 
-
-<!-- ================= NX FOOTER ================= -->
+<!-- ═══════════════════════════════════
+     FOOTER
+═══════════════════════════════════ -->
 <footer class="nx-footer">
 
-  <!-- MAIN FOOTER -->
   <div class="nx-footer-main">
 
     <div class="nx-footer-container">
 
-      <!-- LEFT -->
+      <!-- LEFT — Brand -->
       <div class="nx-footer-col nx-footer-brand">
         <h3 class="nx-footer-logo">TheTripple</h3>
 
@@ -708,7 +737,7 @@
 
         <div class="nx-footer-contact">
           <p>+1 800 200 900</p>
-          <p>support@TheTripple.com</p>
+          <p><a href="mailto:hello@thetripple.com">hello@thetripple.com</a></p>
         </div>
       </div>
 
@@ -743,11 +772,12 @@
     </div>
 
     <div class="nx-footer-bottom">
-      © 2026 BoomerTechnologies. All rights reserved.
+      <p>&copy; 2026 TheTripple. All rights reserved.</p>
     </div>
 
   </div>
 
 </footer>
+
 </body>
 </html>
