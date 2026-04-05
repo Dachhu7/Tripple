@@ -532,8 +532,10 @@ video {
   overflow-y: hidden;
   /* OPTIMIZATION: removed scroll-behavior:smooth here —
      it can conflict with GSAP's controlled horizontal scroll */
-  /* Momentum scrolling on iOS */
-  -webkit-overflow-scrolling: touch;
+  /* FIX: Removed deprecated -webkit-overflow-scrolling:touch (ignored in modern iOS).
+     touch-action:pan-x ensures the browser knows this container scrolls horizontally,
+     preventing accidental vertical-scroll capture on touch devices. */
+  touch-action: pan-x;
   /* Hide scrollbar cross-browser */
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -1314,7 +1316,10 @@ video {
   overflow-x: auto;
   padding-bottom: 12px;
   scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
+  /* FIX: Removed deprecated -webkit-overflow-scrolling:touch.
+     touch-action:pan-x tells the browser this scrolls horizontally,
+     preventing vertical scroll capture while swiping the strip on mobile. */
+  touch-action: pan-x;
 }
 
 .blogs-strip::-webkit-scrollbar { display: none; }

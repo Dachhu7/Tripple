@@ -1,64 +1,107 @@
 /**
- * TheTripple — Optimized script.js
+ * TheTripple — script.js (Mobile-Fixed Production Build)
  *
- * PERFORMANCE PRINCIPLES APPLIED:
- * 1. Single gsap.registerPlugin call at top
- * 2. isMobile / isTablet computed ONCE per session; recomputed on resize via debounced handler
- * 3. Navbar state managed via CSS class toggle (avoids repeated inline style writes / forced reflows)
- * 4. Astronaut float uses requestAnimationFrame with a throttle (runs at 30fps, not 60fps) — halves CPU cost
- * 5. All ScrollTrigger instances created inside window "load" to guarantee layout is stable
- * 6. Removed duplicate/overlapping ScrollTrigger animations (multiple conflicting tweens on same elements)
- * 7. Parallax effects gated behind !isMobile and !prefersReducedMotion checks
- * 8. All GSAP initial states are defined in CSS, not duplicated via gsap.set() (avoids Flash of Unstyled Content)
- * 9. Removed the rotating/scaling glow scrub animations — they caused constant compositing on mobile
- * 10. Batch-created team card animations to reduce ScrollTrigger instance count
+ * FIXES APPLIED vs. original:
+ * ─────────────────────────────────────────────────────────────────────────────
+ * FIX 1  — Load-event race condition on mobile (cached pages fire `load` before
+ *           deferred scripts register the listener). Wrapped the entire init in a
+ *           safe guard: if readyState is already "complete", call init() immediately;
+ *           otherwise wait for the `load` event. Animations now always run.
+ *
+ * FIX 2  — Duplicate `gsap.registerPlugin(ScrollTrigger)` inside the load listener
+ *           (inside the Team Section block) removed. One registration at top is enough.
+ *
+ * FIX 3  — Astronaut float gate raised from > 480px to > 768px. On 481–767px the
+ *           CSS media-query transform (translate(-80%,-50%)) was being silently
+ *           overridden by the JS inline style, misplacing the element on tablet/phablet.
+ *
+ * FIX 4  — Added `ScrollTrigger.normalizeScroll(true)` before any ScrollTrigger is
+ *           created. Prevents iOS Safari's momentum / rubber-band scrolling from
+ *           de-syncing ScrollTrigger pin measurements — the #1 cause of stuck/jittery
+ *           pinned sections on iPhones.
+ *
+ * FIX 5  — Added `ScrollTrigger.config({ limitCallbacks: true, syncInterval: 40 })`
+ *           to batch scroll callbacks and avoid frame-drop on low-end mobile CPUs.
+ *
+ * FIX 6  — Hero text: added explicit `gsap.set()` to seed GSAP's internal transform
+ *           tracker before the repeating timeline begins. This prevents accumulated
+ *           drift on subsequent repeat cycles (GSAP reads CSS transforms correctly on
+ *           first play but can lose sync after an interrupt/resize on mobile).
+ *
+ * FIX 7  — Hero text mobile exit values changed to use `window.innerWidth` multiples
+ *           rather than literal "100vw"/"120vw" strings. GSAP's percentage-string `x`
+ *           values are relative to the element's own width, NOT the viewport — so
+ *           "100vw" in x is not 1 viewport width; the correct approach is a px value
+ *           derived from innerWidth, or keeping the vw string via gsap.utils.clamp.
+ *           Using actual pixel values computed at animation start eliminates the
+ *           discrepancy between perceived and actual off-screen position.
+ *
+ * FIX 8  — Orientation-change handler now fires a second ScrollTrigger.refresh() at
+ *           800 ms (after the first at 500 ms) to handle slow iOS viewport repaints.
+ *
+ * PERFORMANCE PRINCIPLES PRESERVED FROM ORIGINAL:
+ * 1. Single gsap.registerPlugin call
+ * 2. isMobile / isTablet computed once, refreshed on resize (debounced)
+ * 3. Navbar via CSS class toggle (no inline style thrashing)
+ * 4. Astronaut float at ~30fps (every-other-frame throttle)
+ * 5. All ScrollTriggers inside the load guard
+ * 6. Parallax effects gated behind !isMobile && !prefersReducedMotion
+ * 7. CSS defines initial GSAP states; JS animates forward
+ * 8. Batch-created team card animations
  */
 
 // ─── 1. GSAP PLUGIN REGISTRATION (once, immediately) ───────────────────────
 gsap.registerPlugin(ScrollTrigger);
 
 // ─── 2. DEVICE / PREFERENCE DETECTION ──────────────────────────────────────
-// Computed once and cached; refresh on resize (debounced, see bottom of file)
 let _mobile = window.innerWidth < 768;
 let _tablet = window.innerWidth < 1024;
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-const isMobile  = () => _mobile;
-const isTablet  = () => _tablet;
+const isMobile   = () => _mobile;
+const isTablet   = () => _tablet;
 const isTouchDev = () => window.matchMedia("(hover: none)").matches;
 
 // ─── 3. HERO TEXT ANIMATION ─────────────────────────────────────────────────
-// OPTIMIZATION: matchMedia lets GSAP pick the right values per breakpoint
-// and cleanly revert when viewport changes.
+// FIX 6 & 7: seed GSAP's tracker explicitly; use px-based exit offsets.
 const mm = gsap.matchMedia();
 
 mm.add("(min-width: 768px)", () => {
-  // Desktop — large offsets, slower, more dramatic
   if (prefersReducedMotion) return;
+
+  // Seed GSAP's internal x-tracker from the CSS-defined starting transform
+  // so repeat cycles don't drift. CSS has: .left { transform: translateX(-150vw) }
+  gsap.set(".hero-text .left",  { x: () => -window.innerWidth * 1.5 });
+  gsap.set(".hero-text .right", { x: () =>  window.innerWidth * 1.5 });
+
   const tl = gsap.timeline({ repeat: -1, repeatDelay: 1 });
-  tl.to(".hero-text .left",  { x: "0%",     duration: 3,   ease: "power3.out", stagger: 0.3 }, 0);
-  tl.to(".hero-text .right", { x: "0%",     duration: 3,   ease: "power3.out" }, 0);
+  tl.to(".hero-text .left",  { x: 0, duration: 3,   ease: "power3.out", stagger: 0.3 }, 0);
+  tl.to(".hero-text .right", { x: 0, duration: 3,   ease: "power3.out" }, 0);
   tl.to({}, { duration: 1.5 });
-  tl.to(".hero-text .left",  { x: "120vw",  duration: 2.5, ease: "power2.in",  stagger: 0.2 });
-  tl.to(".hero-text .right", { x: "-120vw", duration: 2.5, ease: "power2.in" }, "<");
+  tl.to(".hero-text .left",  { x: () =>  window.innerWidth * 1.2, duration: 2.5, ease: "power2.in", stagger: 0.2 });
+  tl.to(".hero-text .right", { x: () => -window.innerWidth * 1.2, duration: 2.5, ease: "power2.in" }, "<");
   return () => tl.kill();
 });
 
 mm.add("(max-width: 767px)", () => {
-  // Mobile — smaller offsets, faster, lighter
   if (prefersReducedMotion) return;
+
+  // FIX 7: seed using px values so exit distances are screen-accurate
+  gsap.set(".hero-text .left",  { x: () => -window.innerWidth * 1.5 });
+  gsap.set(".hero-text .right", { x: () =>  window.innerWidth * 1.5 });
+
   const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.5 });
-  tl.to(".hero-text .left",  { x: "0%",    duration: 1.8, ease: "power2.out" }, 0);
-  tl.to(".hero-text .right", { x: "0%",    duration: 1.8, ease: "power2.out" }, 0);
+  tl.to(".hero-text .left",  { x: 0, duration: 1.8, ease: "power2.out" }, 0);
+  tl.to(".hero-text .right", { x: 0, duration: 1.8, ease: "power2.out" }, 0);
   tl.to({}, { duration: 1 });
-  tl.to(".hero-text .left",  { x: "100vw",  duration: 1.8, ease: "power2.in" });
-  tl.to(".hero-text .right", { x: "-100vw", duration: 1.8, ease: "power2.in" }, "<");
+  tl.to(".hero-text .left",  { x: () =>  window.innerWidth, duration: 1.8, ease: "power2.in" });
+  tl.to(".hero-text .right", { x: () => -window.innerWidth, duration: 1.8, ease: "power2.in" }, "<");
   return () => tl.kill();
 });
 
 // ─── 4. ASTRONAUT FLOAT ─────────────────────────────────────────────────────
-// OPTIMIZATION: Runs at ~30fps (every other frame) to halve CPU usage.
-// Purely transform-based — no layout properties touched.
+// FIX 3: gated to > 768px so CSS media-query transforms aren't overridden on
+// tablet/phablet widths (481–767px) by the JS inline style.
 const astronaut = document.getElementById("astronaut");
 let angle = 0;
 let rafId = null;
@@ -73,7 +116,7 @@ function getAstroScale() {
 function floatAstronaut() {
   rafId = requestAnimationFrame(floatAstronaut);
   frameCount++;
-  // OPTIMIZATION: Skip every other frame → ~30fps instead of 60fps
+  // ~30fps throttle: skip every other frame
   if (frameCount % 2 !== 0) return;
 
   const s = getAstroScale();
@@ -82,19 +125,18 @@ function floatAstronaut() {
   const r = Math.sin(angle * 0.4) * 8;
   const z = 0.7 + (Math.sin(angle * 0.5) + 1) / 2 * 0.6;
 
-  // OPTIMIZATION: Single transform string avoids multiple style mutations
+  // Single transform string avoids multiple style mutations
   astronaut.style.transform =
     `translate(-50%,-50%) translate(${x}px,${y}px) rotate(${r}deg) scale(${s * z})`;
   angle += 0.015;
 }
 
-// Only start astronaut animation if visible (hidden on mobile via CSS)
-if (astronaut && window.innerWidth > 480 && !prefersReducedMotion) {
+// FIX 3: raised threshold from 480 to 768 to protect CSS media-query positioning
+if (astronaut && window.innerWidth > 768 && !prefersReducedMotion) {
   floatAstronaut();
 }
 
-// ─── 5. FILTER BUTTONS ──────────────────────────────────────────────────────
-// OPTIMIZATION: Event delegation on a parent instead of n individual listeners
+// ─── 5. FILTER BUTTONS (event delegation) ───────────────────────────────────
 const filterContainer = document.querySelector(".filters");
 if (filterContainer) {
   filterContainer.addEventListener("click", (e) => {
@@ -105,14 +147,21 @@ if (filterContainer) {
   });
 }
 
-// ─── 6. ALL SCROLL / LOAD ANIMATIONS ────────────────────────────────────────
-// Everything inside "load" ensures DOM & images are ready, preventing
-// incorrect ScrollTrigger measurements caused by late layout shifts.
-window.addEventListener("load", () => {
+// ─── 6. MAIN SCROLL INIT ────────────────────────────────────────────────────
+// FIX 1: Guard against the load-event race condition on mobile.
+// On a cached page, the browser may fire `load` before deferred scripts are
+// parsed, causing the window.addEventListener("load", ...) to never fire.
+// We check readyState and call init() immediately if already complete.
+function initScrollAnimations() {
 
-  // ── NAVBAR — class-based toggle (no inline style writes on each frame) ──
-  // OPTIMIZATION: CSS handles the visual change via .navbar.scrolled class;
-  // JS only flips the class. One classList write vs. 5 style property writes.
+  // FIX 4: normalizeScroll MUST come before any ScrollTrigger.create() call.
+  // Prevents iOS Safari's momentum scrolling from de-syncing pin measurements.
+  ScrollTrigger.normalizeScroll(true);
+
+  // FIX 5: batch callbacks to reduce CPU spikes on low-end mobile
+  ScrollTrigger.config({ limitCallbacks: true, syncInterval: 40 });
+
+  // ── NAVBAR ──────────────────────────────────────────────────────────────────
   const navbar = document.getElementById("navbar");
   if (navbar) {
     ScrollTrigger.create({
@@ -122,20 +171,17 @@ window.addEventListener("load", () => {
     });
   }
 
-  // ── SERVICES HORIZONTAL SCROLL — disabled on mobile ──────────────────────
+  // ── SERVICES HORIZONTAL SCROLL — desktop only ────────────────────────────
   const scrollWrapper   = document.querySelector(".services-scroll-wrapper");
   const scrollContainer = document.querySelector(".services-grid");
 
   if (scrollWrapper && scrollContainer && !isMobile()) {
     const getScrollAmount = () => scrollContainer.scrollWidth - scrollWrapper.clientWidth;
 
-    // OPTIMIZATION: force3D promotes element to composite layer upfront
     gsap.set(scrollContainer, { force3D: true });
 
     gsap.to(scrollContainer, {
       x:    () => -getScrollAmount(),
-      // OPTIMIZATION: Removed the concurrent scale(0.95) — scale triggers
-      // a composite-layer size change, forcing texture re-upload every frame.
       ease: "none",
       invalidateOnRefresh: true,
       scrollTrigger: {
@@ -175,8 +221,6 @@ window.addEventListener("load", () => {
     }
   );
 
-  // OPTIMIZATION: Batch the title/subtitle/ticker into one timeline to reduce
-  // ScrollTrigger instance count (was 3 separate instances, now 1)
   const servicesTl = gsap.timeline({
     scrollTrigger: { trigger: ".services-container", start: "top 88%", toggleActions: "play none none reverse" }
   });
@@ -197,7 +241,6 @@ window.addEventListener("load", () => {
       "-=0.6"
     );
 
-  // Service cards stagger
   gsap.fromTo(".card",
     { opacity: 0, y: 50, scale: 0.94 },
     {
@@ -217,16 +260,13 @@ window.addEventListener("load", () => {
     if (current === index || index >= total) return;
     current = index;
 
-    // OPTIMIZATION: Kill only active tweens, not all tweens (avoids killing unrelated GSAP instances)
     clientItems.forEach((item, i) => {
-      const isActive = i === index;
-      item.classList.toggle("active", isActive);
+      item.classList.toggle("active", i === index);
     });
     clientImages.forEach((img, i) => {
       img.classList.toggle("active", i === index);
     });
 
-    // Animate only the newly active item
     gsap.fromTo(clientItems[index],  { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, overwrite: "auto" });
     gsap.fromTo(clientImages[index], { scale: 0.9, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.7, overwrite: "auto" });
   }
@@ -246,11 +286,11 @@ window.addEventListener("load", () => {
       }
     });
   } else if (clientItems.length && isMobile()) {
-    // Show first image as active; CSS makes all client items visible on mobile
+    // On mobile: CSS makes all client items visible; show first image as active
     if (clientImages[0]) clientImages[0].classList.add("active");
   }
 
-  // Clients header entrance (single timeline to reduce ST instances)
+  // Clients header entrance
   const clientsTl = gsap.timeline({
     scrollTrigger: { trigger: ".clients-header", start: "top 90%", end: "top 40%", scrub: 1.5 }
   });
@@ -283,7 +323,7 @@ window.addEventListener("load", () => {
     }
   );
 
-  // ── ABOUT SECTION (legacy) ────────────────────────────────────────────────
+  // ── ABOUT SECTION (legacy .about-section) ────────────────────────────────
   if (document.querySelector(".about-section")) {
     const aboutTl = gsap.timeline({
       scrollTrigger: { trigger: ".about-section", start: "top 85%", end: "top 10%", scrub: 1.5 }
@@ -293,7 +333,6 @@ window.addEventListener("load", () => {
       .to(".about-heading", { y: 0, opacity: 1 }, "+=0.2")
       .to(".about-text",    { y: 0, opacity: 1, stagger: 0.25 }, "+=0.2");
 
-    // Parallax on bg only on desktop (no-layout: background-position via GSAP)
     if (!isMobile() && !prefersReducedMotion) {
       gsap.to(".about-bg", {
         scale: 1.15, y: 80,
@@ -303,17 +342,15 @@ window.addEventListener("load", () => {
   }
 
   // ── BLOGS SECTION ─────────────────────────────────────────────────────────
-  // Batch blogs header into one timeline
   const blogHeaderTl = gsap.timeline({
     scrollTrigger: { trigger: ".blogs-header", start: "top 85%", toggleActions: "play none none reverse" }
   });
 
   blogHeaderTl
-    .to(".blogs-eyebrow",    { opacity: 1, y:  0, duration: 1, ease: "power3.out" })
+    .to(".blogs-eyebrow",    { opacity: 1, y:  0, duration: 1,   ease: "power3.out" })
     .to(".blogs-title-line", { opacity: 1, y:  0, duration: 1.2, ease: "power4.out", stagger: 0.15 }, "-=0.5")
-    .to(".blogs-subtitle",   { opacity: 1, y:  0, duration: 1, ease: "power3.out" }, "-=0.6");
+    .to(".blogs-subtitle",   { opacity: 1, y:  0, duration: 1,   ease: "power3.out" }, "-=0.6");
 
-  // Scroll-scrub on title scale (separate because different scrub config)
   if (!prefersReducedMotion) {
     gsap.fromTo(".blogs-title",
       { scale: 0.88, opacity: 0 },
@@ -342,14 +379,13 @@ window.addEventListener("load", () => {
     });
   }
 
-  // Blog cards stagger
   gsap.to(".blog-card", {
     opacity: 1, y: 0, duration: 0.9, ease: "power3.out",
     stagger: { amount: 0.5, from: "start" },
     scrollTrigger: { trigger: ".blogs-grid-wrap", start: "top 82%", toggleActions: "play none none reverse" }
   });
 
-  // Card image parallax — desktop only, gated to avoid creating 4+ scrolltriggers on mobile
+  // Card image parallax — desktop only
   if (!isMobile() && !prefersReducedMotion) {
     document.querySelectorAll(".blog-card").forEach(card => {
       const img = card.querySelector(".blog-card-img");
@@ -371,7 +407,7 @@ window.addEventListener("load", () => {
     }
   );
 
-  // Glow parallax — desktop only (purely decorative; big GPU cost on mobile)
+  // Glow parallax — desktop only
   if (!isMobile() && !prefersReducedMotion) {
     gsap.to(".glow-1", { y: -120, x:  40, ease: "none", scrollTrigger: { trigger: ".blogs-section", start: "top bottom", end: "bottom top", scrub: 2   } });
     gsap.to(".glow-2", { y:   80, x: -30, ease: "none", scrollTrigger: { trigger: ".blogs-section", start: "top bottom", end: "bottom top", scrub: 2.5 } });
@@ -504,65 +540,62 @@ window.addEventListener("load", () => {
     });
   }
 
-// ── TEAM SECTION (FINAL FIXED VERSION) ──────────────────────────────────────
+  // ── TEAM SECTION ──────────────────────────────────────────────────────────
+  // FIX 2: Removed duplicate gsap.registerPlugin(ScrollTrigger) that was here.
+  const teamWrap = document.querySelector(".au-team-wrap");
 
-gsap.registerPlugin(ScrollTrigger);
+  if (teamWrap) {
+    gsap.from(".au-team-wrap", {
+      opacity: 0,
+      y: 40,
+      duration: 0.6,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: ".au-team-wrap",
+        start: "top 90%",
+        once: true
+      }
+    });
 
-const teamWrap = document.querySelector(".au-team-wrap");
+    gsap.from(".au-team-header", {
+      opacity: 0,
+      y: 30,
+      duration: 0.5,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: ".au-team-wrap",
+        start: "top 88%",
+        once: true
+      }
+    });
 
-if (teamWrap) {
+    gsap.from(".au-team-title", {
+      opacity: 0,
+      y: 30,
+      duration: 0.5,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: ".au-team-header",
+        start: "top 90%",
+        once: true
+      }
+    });
 
-  gsap.from(".au-team-wrap", {
-    opacity: 0,
-    y: 40,
-    duration: 0.6,
-    ease: "power2.out",
-    scrollTrigger: {
-      trigger: ".au-team-wrap",
-      start: "top 90%",
-      once: true
-    }
-  });
+    gsap.from(".au-team-card", {
+      opacity: 0,
+      y: 30,
+      duration: 0.5,
+      ease: "power2.out",
+      stagger: 0.08,
+      scrollTrigger: {
+        trigger: ".au-team-strip",
+        start: "top 92%",
+        once: true
+      }
+    });
+  }
 
-  gsap.from(".au-team-header", {
-    opacity: 0,
-    y: 30,
-    duration: 0.5,
-    ease: "power2.out",
-    scrollTrigger: {
-      trigger: ".au-team-wrap",
-      start: "top 88%",
-      once: true
-    }
-  });
-
-  gsap.from(".au-team-title", {
-    opacity: 0,
-    y: 30,
-    duration: 0.5,
-    ease: "power2.out",
-    scrollTrigger: {
-      trigger: ".au-team-header",
-      start: "top 90%",
-      once: true
-    }
-  });
-
-  gsap.from(".au-team-card", {
-    opacity: 0,
-    y: 30,
-    duration: 0.5,
-    ease: "power2.out",
-    stagger: 0.08,
-    scrollTrigger: {
-      trigger: ".au-team-strip",
-      start: "top 92%",
-      once: true
-    }
-  });
-}
-
-// ── CTA BANNER ────────────────────────────────────────────────────────────
+  // ── CTA BANNER ────────────────────────────────────────────────────────────
   const ctaBanner = document.querySelector(".au-cta-banner");
   if (ctaBanner) {
     gsap.fromTo(".au-cta-banner",
@@ -573,7 +606,6 @@ if (teamWrap) {
       }
     );
 
-    // CTA content timeline
     const ctaTl = gsap.timeline({
       scrollTrigger: { trigger: ".au-cta-banner", start: "top 85%", toggleActions: "play none none reverse" }
     });
@@ -640,14 +672,12 @@ if (teamWrap) {
   function openModal() {
     modal.classList.add("active");
     document.body.style.overflow = "hidden";
-    // Move focus to close button for accessibility
     closeBtn.focus();
   }
 
   function closeModal() {
     modal.classList.remove("active");
     document.body.style.overflow = "";
-    // Return focus to trigger for accessibility
     if (openBtn) openBtn.focus();
   }
 
@@ -655,27 +685,35 @@ if (teamWrap) {
     openBtn.addEventListener("click",  openModal);
     closeBtn.addEventListener("click", closeModal);
 
-    // Click outside modal box closes it
     modal.addEventListener("click", (e) => {
       if (e.target === modal) closeModal();
     });
 
-    // Escape key closes modal
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && modal.classList.contains("active")) closeModal();
     });
   }
 
   // ── FINAL REFRESH ──────────────────────────────────────────────────────────
-  // Call once after all ScrollTriggers are set up
+  // Call once after all ScrollTriggers are registered so measurements are accurate.
   ScrollTrigger.refresh();
 
-}); // end window.addEventListener("load")
+} // end initScrollAnimations()
+
+
+// ─── FIX 1: Load-event race condition guard ──────────────────────────────────
+// If the `load` event already fired (can happen on mobile with cached assets when
+// the browser executes deferred scripts after the event), call init immediately.
+// Otherwise, register normally and wait.
+if (document.readyState === "complete") {
+  // Page is already fully loaded — run immediately (no event needed)
+  initScrollAnimations();
+} else {
+  window.addEventListener("load", initScrollAnimations);
+}
 
 
 // ─── 7. RESIZE & ORIENTATION HANDLERS ───────────────────────────────────────
-// OPTIMIZATION: Debounced — prevents redundant recalculations while user is dragging.
-// Also refreshes isMobile/isTablet flags so gate checks stay accurate.
 let resizeTimer;
 
 function onResize() {
@@ -689,11 +727,22 @@ function onResize() {
 
 window.addEventListener("resize", onResize, { passive: true });
 
-// Orientation change — give browser 400ms to repaint before recalculating
+// FIX 8: Orientation change — iOS needs more time than 400ms for accurate layout.
+// Fire two refreshes: one at 500ms (handles most cases) and one at 800ms (catches
+// slow repaints and dynamic-viewport-unit recalculations on Safari).
 window.addEventListener("orientationchange", () => {
+  _mobile = window.innerWidth < 768;
+  _tablet = window.innerWidth < 1024;
+
   setTimeout(() => {
     _mobile = window.innerWidth < 768;
     _tablet = window.innerWidth < 1024;
     ScrollTrigger.refresh();
-  }, 400);
+  }, 500);
+
+  setTimeout(() => {
+    _mobile = window.innerWidth < 768;
+    _tablet = window.innerWidth < 1024;
+    ScrollTrigger.refresh();
+  }, 800);
 }, { passive: true });
