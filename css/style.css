@@ -1768,21 +1768,16 @@ video {
 }
 
 /* HOW WE WORK — CAPABILITIES STRIP */
+
 .au-team-wrap {
   position:  relative;
   z-index:   2;
   padding:   30px 0 60px;
   border-top: 1px solid rgba(255,255,255,0.05);
-  /* GSAP initial state */
-  opacity:   0;
-  transform: translateY(70px);
 }
 
 .au-team-header {
   margin-bottom: 50px;
-  /* GSAP initial state */
-  opacity:   0;
-  transform: translateY(30px);
 }
 
 .au-team-title {
@@ -1792,9 +1787,6 @@ video {
   color:          var(--clr-white);
   line-height:    0.95;
   margin:         0;
-  /* GSAP initial state */
-  opacity:   0;
-  transform: translateY(70px) skewX(-4deg);
 }
 
 .au-team-title span {
@@ -1815,9 +1807,6 @@ video {
   overflow:      hidden;
   background:    rgba(255,255,255,0.025);
   border:        1px solid rgba(255,255,255,0.07);
-  /* GSAP initial state */
-  opacity:    0;
-  transform:  translateY(80px);
   transition: transform var(--transition-med), box-shadow var(--transition-med), border-color var(--transition-med);
   will-change: transform, opacity;
 }
@@ -1840,7 +1829,6 @@ video {
   object-fit: cover;
   display:    block;
   transition: transform 0.6s ease, filter 0.6s ease;
-  /* OPTIMIZATION: grayscale is a compositable filter on modern browsers */
   filter:     grayscale(20%);
   will-change: transform, filter;
 }
@@ -2003,7 +1991,23 @@ video {
 @media (max-width: 1024px) {
   .au-split-inner  { grid-template-columns: 1fr; gap: 40px; }
   .au-opening-sub  { flex-direction: column; gap: 24px; }
-  .au-team-strip   { grid-template-columns: repeat(2, 1fr); }
+
+  /* ✅ IMPROVED TEAM GRID */
+  .au-team-strip   { 
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px; /* smoother spacing */
+  }
+
+  /* ✅ FIX CARD HEIGHT BALANCE */
+  .au-team-img-wrap {
+    height: 220px;
+  }
+
+  /* ✅ BETTER TITLE SCALE */
+  .au-team-title {
+    font-size: clamp(36px, 5vw, 60px);
+    letter-spacing: -2px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -2024,9 +2028,36 @@ video {
   .au-img-card-back   { height: 220px; }
   .au-img-card-front  { height: 240px; }
 
-  .au-team-strip  { grid-template-columns: 1fr; }
+  /* ✅ TEAM SECTION FIX */
+  .au-team-strip  { 
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .au-team-img-wrap {
+    height: 200px;
+  }
+
+  .au-team-info {
+    padding: 16px 16px 20px;
+  }
+
+  .au-team-name {
+    font-size: 15px;
+  }
+
+  .au-team-vibe {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
   .au-cta-heading { font-size: 36px; letter-spacing: -1.5px; }
-  .au-team-title  { font-size: 44px; letter-spacing: -2px; }
+
+  /* ✅ CLEAN TITLE FOR MOBILE */
+  .au-team-title  { 
+    font-size: 38px; 
+    letter-spacing: -1.5px;
+  }
 
   /* Disable card hover lift on touch devices */
   .au-team-card:hover { transform: none; }
@@ -2042,7 +2073,37 @@ video {
   .au-img-card-back   { height: 180px; }
   .au-img-card-front  { height: 200px; }
   .au-cta-heading     { font-size: 30px; }
-  .au-team-strip      { grid-template-columns: 1fr; }
+
+  /* ✅ FINAL MOBILE TUNING */
+  .au-team-strip { 
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .au-team-img-wrap {
+    height: 180px;
+  }
+
+  .au-team-info {
+    padding: 14px 14px 18px;
+  }
+
+  .au-team-name {
+    font-size: 14px;
+  }
+
+  .au-team-role {
+    font-size: 11px;
+  }
+
+  .au-team-vibe {
+    font-size: 11px;
+  }
+
+  .au-team-title {
+    font-size: 32px;
+    letter-spacing: -1px;
+  }
 
   .au-img-badge {
     right:   5px;
@@ -2055,8 +2116,6 @@ video {
 
 /* ============================================================
    TOUCH-DEVICE OVERRIDES
-   OPTIMIZATION: Disable transform-heavy hover states on touch
-   (no :hover on touch = no visual glitch, saves GPU composite)
 ============================================================ */
 @media (hover: none) {
   .blog-card:hover,
@@ -2072,7 +2131,6 @@ video {
    REDUCED MOTION — respect user preference
 ============================================================ */
 @media (prefers-reduced-motion: reduce) {
-  /* Stop all CSS animations */
   .blogs-ticker-track,
   .au-marquee-fwd,
   .au-marquee-rev,
@@ -2080,7 +2138,6 @@ video {
     animation: none;
   }
 
-  /* Remove CSS transitions that could distract */
   *,
   *::before,
   *::after {

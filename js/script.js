@@ -504,73 +504,65 @@ window.addEventListener("load", () => {
     });
   }
 
-  // ── TEAM SECTION ──────────────────────────────────────────────────────────
-  // OPTIMIZATION: Wrap team-wrap entrance + header into one timeline
-  const teamWrap = document.querySelector(".au-team-wrap");
-  if (teamWrap) {
-    gsap.fromTo(".au-team-wrap",
-      { opacity: 0, y: 70 },
-      {
-        opacity: 1, y: 0, duration: 1, ease: "power3.out",
-        scrollTrigger: { trigger: ".au-team-wrap", start: "top 92%", toggleActions: "play none none none" }
-      }
-    );
+// ── TEAM SECTION (FINAL FIXED VERSION) ──────────────────────────────────────
 
-    const teamHeaderTl = gsap.timeline({
-      scrollTrigger: { trigger: ".au-team-wrap", start: "top 88%", toggleActions: "play none none reverse" }
-    });
-    teamHeaderTl
-      .fromTo(".au-team-wrap .au-eyebrow",
-        { opacity: 0, x: -40, letterSpacing: "10px" },
-        { opacity: 1, x:  0, letterSpacing: "4px", duration: 1, ease: "power3.out" }
-      )
-      .to(".au-team-header",
-        { opacity: 1, y: 0, duration: 1, ease: "power3.out" },
-        "-=0.7"
-      );
+gsap.registerPlugin(ScrollTrigger);
 
-    // Team title with scrub
-    gsap.fromTo(".au-team-title",
-      { opacity: 0, y: 70, skewX: -4 },
-      {
-        opacity: 1, y: 0, skewX: 0, ease: "power4.out",
-        scrollTrigger: { trigger: ".au-team-header", start: "top 88%", end: "top 50%", scrub: 1.2 }
-      }
-    );
+const teamWrap = document.querySelector(".au-team-wrap");
 
-    // Team cards — different animation per device
-    const teamCards = document.querySelectorAll(".au-team-card");
-    teamCards.forEach((card, i) => {
-      if (!isMobile() && !prefersReducedMotion) {
-        const fromX  = i % 2 === 0 ? -60 :  60;
-        const fromRot = i % 2 === 0 ?  -4 :   4;
-        gsap.fromTo(card,
-          { opacity: 0, y: 90, x: fromX, rotate: fromRot },
-          {
-            opacity: 1, y: 0, x: 0, rotate: 0, duration: 1.1, ease: "power3.out", delay: i * 0.08,
-            scrollTrigger: { trigger: ".au-team-strip", start: "top 84%", toggleActions: "play none none reverse" }
-          }
-        );
+if (teamWrap) {
 
-        // Image parallax
-        const img = card.querySelector(".au-team-img");
-        if (img) {
-          gsap.to(img, { y: -40, ease: "none", scrollTrigger: { trigger: card, start: "top bottom", end: "bottom top", scrub: 1.3 } });
-        }
-      } else {
-        // Mobile: simple fade-up, lower delay cap to avoid >0.5s wait on last card
-        gsap.fromTo(card,
-          { opacity: 0, y: 50 },
-          {
-            opacity: 1, y: 0, duration: 0.8, ease: "power3.out", delay: Math.min(i * 0.08, 0.4),
-            scrollTrigger: { trigger: card, start: "top 90%", toggleActions: "play none none none" }
-          }
-        );
-      }
-    });
-  }
+  gsap.from(".au-team-wrap", {
+    opacity: 0,
+    y: 40,
+    duration: 0.6,
+    ease: "power2.out",
+    scrollTrigger: {
+      trigger: ".au-team-wrap",
+      start: "top 90%",
+      once: true
+    }
+  });
 
-  // ── CTA BANNER ────────────────────────────────────────────────────────────
+  gsap.from(".au-team-header", {
+    opacity: 0,
+    y: 30,
+    duration: 0.5,
+    ease: "power2.out",
+    scrollTrigger: {
+      trigger: ".au-team-wrap",
+      start: "top 88%",
+      once: true
+    }
+  });
+
+  gsap.from(".au-team-title", {
+    opacity: 0,
+    y: 30,
+    duration: 0.5,
+    ease: "power2.out",
+    scrollTrigger: {
+      trigger: ".au-team-header",
+      start: "top 90%",
+      once: true
+    }
+  });
+
+  gsap.from(".au-team-card", {
+    opacity: 0,
+    y: 30,
+    duration: 0.5,
+    ease: "power2.out",
+    stagger: 0.08,
+    scrollTrigger: {
+      trigger: ".au-team-strip",
+      start: "top 92%",
+      once: true
+    }
+  });
+}
+
+// ── CTA BANNER ────────────────────────────────────────────────────────────
   const ctaBanner = document.querySelector(".au-cta-banner");
   if (ctaBanner) {
     gsap.fromTo(".au-cta-banner",
