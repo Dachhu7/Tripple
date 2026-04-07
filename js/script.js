@@ -84,19 +84,11 @@ mm.add("(min-width: 768px)", () => {
 });
 
 mm.add("(max-width: 767px)", () => {
-  if (prefersReducedMotion) return;
-
-  // FIX 7: seed using px values so exit distances are screen-accurate
-  gsap.set(".hero-text .left",  { x: () => -window.innerWidth * 1.5 });
-  gsap.set(".hero-text .right", { x: () =>  window.innerWidth * 1.5 });
-
-  const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.5 });
-  tl.to(".hero-text .left",  { x: 0, duration: 1.8, ease: "power2.out" }, 0);
-  tl.to(".hero-text .right", { x: 0, duration: 1.8, ease: "power2.out" }, 0);
-  tl.to({}, { duration: 1 });
-  tl.to(".hero-text .left",  { x: () =>  window.innerWidth, duration: 1.8, ease: "power2.in" });
-  tl.to(".hero-text .right", { x: () => -window.innerWidth, duration: 1.8, ease: "power2.in" }, "<");
-  return () => tl.kill();
+  // MOBILE: No scroll animation — CSS already shows the text at transform:none / opacity:1.
+  // Clear any GSAP inline styles so the CSS mobile-reset rules take full effect.
+  gsap.set(".hero-text .left",  { clearProps: "all" });
+  gsap.set(".hero-text .right", { clearProps: "all" });
+  return () => {};
 });
 
 // ─── 4. ASTRONAUT FLOAT ─────────────────────────────────────────────────────
@@ -154,12 +146,18 @@ if (filterContainer) {
 // We check readyState and call init() immediately if already complete.
 function initScrollAnimations() {
 
-  // FIX 4: normalizeScroll MUST come before any ScrollTrigger.create() call.
-  // Prevents iOS Safari's momentum scrolling from de-syncing pin measurements.
-  ScrollTrigger.normalizeScroll(true);
+  // FIX 4 & FIX 5: normalizeScroll and config are desktop-only.
+  // normalizeScroll(true) on mobile intercepts native touch scrolling and
+  // can cause jank / rubber-band interference. Config is also unnecessary
+  // since no ScrollTriggers are registered on mobile.
+  if (!isMobile()) {
+    // FIX 4: normalizeScroll MUST come before any ScrollTrigger.create() call.
+    // Prevents iOS Safari's momentum scrolling from de-syncing pin measurements.
+    ScrollTrigger.normalizeScroll(true);
 
-  // FIX 5: batch callbacks to reduce CPU spikes on low-end mobile
-  ScrollTrigger.config({ limitCallbacks: true, syncInterval: 40 });
+    // FIX 5: batch callbacks to reduce CPU spikes on low-end mobile
+    ScrollTrigger.config({ limitCallbacks: true, syncInterval: 40 });
+  }
 
   // ── NAVBAR ──────────────────────────────────────────────────────────────────
   const navbar = document.getElementById("navbar");
@@ -170,6 +168,12 @@ function initScrollAnimations() {
       onLeaveBack: () => navbar.classList.remove("scrolled")
     });
   }
+
+  // ── ALL SCROLL-BASED ANIMATIONS — DESKTOP ONLY ───────────────────────────
+  // On mobile (≤ 767px) every ScrollTrigger/GSAP scroll animation is skipped.
+  // CSS (the @media (max-width:767px) block) ensures all elements are visible
+  // by resetting opacity and transform to their final/natural values.
+  if (!isMobile()) {
 
   // ── SERVICES HORIZONTAL SCROLL — desktop only ────────────────────────────
   const scrollWrapper   = document.querySelector(".services-scroll-wrapper");
@@ -663,6 +667,8 @@ function initScrollAnimations() {
       }
     );
   });
+
+  } // end if (!isMobile()) — scroll animations
 
   // ── MODAL ─────────────────────────────────────────────────────────────────
   const openBtn  = document.getElementById("auOpenModal");

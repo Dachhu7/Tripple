@@ -2474,3 +2474,165 @@ video {
     gap:            24px;
   }
 }
+
+/* ============================================================
+   MOBILE SCROLL-ANIMATION RESET (≤ 767px)
+   All elements that carry GSAP initial states (opacity:0,
+   transform offsets) are reset here so they appear normally
+   when JS scroll animations are disabled on mobile.
+   Desktop is completely unaffected — these rules only apply
+   at max-width: 767px.
+============================================================ */
+@media (max-width: 767px) {
+
+  /* Hero text — remove the off-screen GSAP seed transform so
+     the text is visible immediately; JS will NOT animate it */
+  .hero-text .left,
+  .hero-text .right {
+    transform: none;
+    opacity: 1;
+  }
+
+  /* Services section */
+  .services-section {
+    opacity: 1;
+  }
+
+  .section-title {
+    opacity: 1;
+    transform: none;
+  }
+
+  .section-subtitle {
+    opacity: 1;
+    transform: none;
+  }
+
+  .blogs-ticker-wrap {
+    opacity: 1;
+  }
+
+  .card {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Clients section */
+  .clients-scroll-section {
+    opacity: 1;
+  }
+
+  .clients-title {
+    opacity: 1;
+    transform: none;
+  }
+
+  .clients-subtitle {
+    opacity: 1;
+    transform: none;
+  }
+
+  .clients-left {
+    opacity: 1;
+    transform: none;
+  }
+
+  .clients-right {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Blogs section */
+  .blogs-eyebrow {
+    opacity: 1;
+    transform: none;
+  }
+
+  .blogs-title-line {
+    opacity: 1;
+    transform: none;
+  }
+
+  .blogs-subtitle {
+    opacity: 1;
+    transform: none;
+  }
+
+  .blogs-featured-wrap {
+    opacity: 1;
+    transform: none;
+  }
+
+  .blog-card {
+    opacity: 1;
+    transform: none;
+  }
+
+  .blogs-strip-wrap {
+    opacity: 1;
+    transform: none;
+  }
+
+  .blogs-cta-wrap {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* About Us section */
+  .au-eyebrow {
+    opacity: 1;
+    transform: none;
+  }
+
+  .au-hl-line {
+    opacity: 1;
+    transform: none;
+  }
+
+  .au-opening-sub {
+    opacity: 1;
+    transform: none;
+  }
+
+  .au-marquee-divider {
+    opacity: 1;
+  }
+
+  .au-split-left {
+    opacity: 1;
+    transform: none;
+  }
+
+  .au-story-block {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* CTA banner */
+  .au-cta-banner {
+    opacity: 1;
+    transform: none;
+  }
+
+  .au-cta-heading {
+    opacity: 1;
+    transform: none;
+  }
+
+  .au-cta-highlight {
+    opacity: 1;
+    transform: none;
+  }
+
+  .au-cta-actions {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Universal reveal utility */
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+}
