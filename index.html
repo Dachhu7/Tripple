@@ -20,11 +20,23 @@
 
 <body>
 
+<div class="cursor-dot"></div>
+<div class="cursor-circle"></div>
+
+<!-- Noise -->
+<div class="noise" aria-hidden="true"></div>
+<div class="ambient" aria-hidden="true"></div>
+
 <!-- NAVBAR -->
 <nav class="navbar fixed-top" id="navbar">
   <div class="container d-flex justify-content-between align-items-center">
+    
     <h2 class="logo">TheTripple</h2>
-    <div class="menu" role="button" tabindex="0" aria-label="Open menu">Menu</div>
+
+    <div class="menu">
+      <a href="/services/">Services</a>
+    </div>
+
   </div>
 </nav>
 
@@ -219,16 +231,31 @@
 <!-- ═══════════════════════════════════
      SERVICES
 ═══════════════════════════════════ -->
-<section class="services-section nx-sec">
+<section class="services-section nx-sec" id="section-services">
 
   <video class="services-bg-video" autoplay muted loop playsinline aria-hidden="true">
-    <source src="assets/12638483_2088_720_60fps.mp4" type="video/mp4">
+    <source src="/assets/12638483_2088_720_60fps.mp4" type="video/mp4">
   </video>
 
   <div class="services-container">
 
-    <h2 class="section-title">WHAT WE DO</h2>
-    <p class="section-subtitle">Everything You Need!</p>
+    <!-- HEADER BLOCK -->
+    <div class="srv-header" id="srv-header">
+      <div class="srv-header-left">
+        <span class="srv-eyebrow" id="srv-eyebrow">WHAT WE DO</span>
+        <h2 class="srv-title" id="srv-title">
+          <span class="srv-title-line">Everything</span>
+          <span class="srv-title-line srv-title-stroke">You Need.</span>
+        </h2>
+      </div>
+      <div class="srv-header-right" id="srv-header-right">
+        <p class="srv-header-desc">From first impression to loyal customer — we craft every touchpoint with mad creativity and proven strategy.</p>
+        <div class="srv-header-stat">
+          <span class="srv-stat-num">10+</span>
+          <span class="srv-stat-label">Services. One roof.</span>
+        </div>
+      </div>
+    </div>
 
     <!-- MARQUEE TICKER -->
     <div class="blogs-ticker-wrap" id="blogs-ticker" aria-hidden="true">
@@ -241,7 +268,6 @@
         <span>Creative Direction</span><span class="ticker-sep">✦</span>
         <span>SEO &amp; Ads</span><span class="ticker-sep">✦</span>
         <span>Visual Identity</span><span class="ticker-sep">✦</span>
-        <!-- Duplicate for seamless loop -->
         <span>Branding</span><span class="ticker-sep">✦</span>
         <span>Web Design</span><span class="ticker-sep">✦</span>
         <span>Content Strategy</span><span class="ticker-sep">✦</span>
@@ -253,64 +279,184 @@
       </div>
     </div>
 
-    <div class="services-scroll-wrapper">
-      <div class="services-grid">
+    <!-- SERVICES BENTO GRID -->
+    <div class="srv-bento" id="srv-bento">
 
-        <div class="card" style="background-image:url('assets/web.jpg')">
-          <h3>Websites</h3>
-          <p>We design sleek, high-converting websites that turn visitors into customers.</p>
+      <!-- ROW 1: Large feature card + 2 stacked -->
+      <div class="srv-bento-row srv-row-1">
+
+        <div class="srv-card srv-card--large" data-srv-index="0" style="--card-img:url('/assets/web.jpg')">
+          <div class="srv-card-img" aria-hidden="true"></div>
+          <div class="srv-icon" aria-hidden="true">🌐</div>
+          <div class="srv-card-body">
+            <span class="srv-num">01</span>
+            <h3 class="srv-name">Websites</h3>
+            <p class="srv-desc">Sleek, high-converting websites engineered to turn casual visitors into loyal customers — built with pixel-perfect precision and blazing performance.</p>
+            <div class="srv-meta">
+              <span class="srv-tag">Web</span>
+              <span class="srv-tag srv-tag--green">Dev + Design</span>
+            </div>
+          </div>
+          <div class="srv-arrow" aria-hidden="true">→</div>
+          <div class="srv-card-glow" aria-hidden="true"></div>
         </div>
 
-        <div class="card" style="background-image:url('assets/content.jpg')">
-          <h3>Content Creation</h3>
-          <p>We create high-quality, on-brand content that engages and inspires.</p>
-        </div>
+        <div class="srv-stack">
+          <div class="srv-card srv-card--tall" data-srv-index="1" style="--card-img:url('/assets/content.jpg')">
+            <div class="srv-card-img" aria-hidden="true"></div>
+            <div class="srv-icon" aria-hidden="true">✍️</div>
+            <div class="srv-card-body">
+              <span class="srv-num">02</span>
+              <h3 class="srv-name">Content Creation</h3>
+              <p class="srv-desc">High-quality, on-brand content that engages, educates, and inspires action across every channel.</p>
+              <div class="srv-meta">
+                <span class="srv-tag">Content</span>
+              </div>
+            </div>
+            <div class="srv-arrow" aria-hidden="true">→</div>
+            <div class="srv-card-glow" aria-hidden="true"></div>
+          </div>
 
-        <div class="card" style="background-image:url('assets/design.jpg')">
-          <h3>Posters &amp; Designs</h3>
-          <p>Visually stunning creatives that capture attention instantly.</p>
-        </div>
-
-        <div class="card" style="background-image:url('assets/social.jpg')">
-          <h3>Social Media</h3>
-          <p>We manage your brand presence with strategy and daily engagement.</p>
-        </div>
-
-        <div class="card" style="background-image:url('assets/Video%20%26%20Photoshoots.jpg')">
-          <h3>Video &amp; Photoshoots</h3>
-          <p>Professional shoots and cinematic edits for powerful storytelling.</p>
-        </div>
-
-        <div class="card" style="background-image:url('assets/Digital%20Marketing.jpg')">
-          <h3>Digital Marketing</h3>
-          <p>SEO, ads &amp; campaigns to boost visibility and maximize ROI.</p>
-        </div>
-
-        <div class="card" style="background-image:url('assets/Growth%20Strategies.jpg')">
-          <h3>Growth Strategies</h3>
-          <p>Smart strategies designed for long-term business success.</p>
-        </div>
-
-        <div class="card" style="background-image:url('assets/Collaborations.jpg')">
-          <h3>Collaborations</h3>
-          <p>Partnering with brands to increase reach and credibility.</p>
-        </div>
-
-        <div class="card" style="background-image:url('assets/Events.jpg')">
-          <h3>Events</h3>
-          <p>Memorable brand experiences and product launches.</p>
-        </div>
-
-        <div class="card highlight" style="background-image:url('assets/Clubhouses.jpg')">
-          <h3>Coming Soon</h3>
-          <p>Clubhouses &amp; unique spaces are on the way.</p>
+          <div class="srv-card srv-card--tall" data-srv-index="2" style="--card-img:url('/assets/design.jpg')">
+            <div class="srv-card-img" aria-hidden="true"></div>
+            <div class="srv-icon" aria-hidden="true">🎨</div>
+            <div class="srv-card-body">
+              <span class="srv-num">03</span>
+              <h3 class="srv-name">Posters &amp; Designs</h3>
+              <p class="srv-desc">Visually stunning creatives that stop the scroll and capture attention the moment eyes land on them.</p>
+              <div class="srv-meta">
+                <span class="srv-tag">Design</span>
+              </div>
+            </div>
+            <div class="srv-arrow" aria-hidden="true">→</div>
+            <div class="srv-card-glow" aria-hidden="true"></div>
+          </div>
         </div>
 
       </div>
-    </div>
 
-  </div>
-</section>
+      <!-- ROW 2: 3 equal cards -->
+      <div class="srv-bento-row srv-row-2">
+
+        <div class="srv-card srv-card--mid" data-srv-index="3" style="--card-img:url('/assets/social.jpg')">
+          <div class="srv-card-img" aria-hidden="true"></div>
+          <div class="srv-icon" aria-hidden="true">📱</div>
+          <div class="srv-card-body">
+            <span class="srv-num">04</span>
+            <h3 class="srv-name">Social Media</h3>
+            <p class="srv-desc">Dominate every platform with strategy-led content, daily engagement, and a distinctive brand voice that builds real community.</p>
+            <div class="srv-meta">
+              <span class="srv-tag">Social</span>
+              <span class="srv-tag srv-tag--green">Growth</span>
+            </div>
+          </div>
+          <div class="srv-arrow" aria-hidden="true">→</div>
+          <div class="srv-card-glow" aria-hidden="true"></div>
+        </div>
+
+        <div class="srv-card srv-card--mid" data-srv-index="4" style="--card-img:url('/assets/Video%20%26%20Photoshoots.jpg')">
+          <div class="srv-card-img" aria-hidden="true"></div>
+          <div class="srv-icon" aria-hidden="true">🎬</div>
+          <div class="srv-card-body">
+            <span class="srv-num">05</span>
+            <h3 class="srv-name">Video &amp; Photoshoots</h3>
+            <p class="srv-desc">Cinematic edits and pro-grade shoots that tell your brand's story through powerful, unforgettable visuals.</p>
+            <div class="srv-meta">
+              <span class="srv-tag">Media</span>
+              <span class="srv-tag">Cinematic</span>
+            </div>
+          </div>
+          <div class="srv-arrow" aria-hidden="true">→</div>
+          <div class="srv-card-glow" aria-hidden="true"></div>
+        </div>
+
+        <div class="srv-card srv-card--mid" data-srv-index="5" style="--card-img:url('/assets/Digital%20Marketing.jpg')">
+          <div class="srv-card-img" aria-hidden="true"></div>
+          <div class="srv-icon" aria-hidden="true">📈</div>
+          <div class="srv-card-body">
+            <span class="srv-num">06</span>
+            <h3 class="srv-name">Digital Marketing</h3>
+            <p class="srv-desc">Data-driven SEO, performance ads &amp; full-funnel campaigns engineered to maximize ROI and scale your brand fast.</p>
+            <div class="srv-meta">
+              <span class="srv-tag">Marketing</span>
+              <span class="srv-tag srv-tag--green">ROI</span>
+            </div>
+          </div>
+          <div class="srv-arrow" aria-hidden="true">→</div>
+          <div class="srv-card-glow" aria-hidden="true"></div>
+        </div>
+
+      </div>
+
+      <!-- ROW 3: stacked + wide + coming -->
+      <div class="srv-bento-row srv-row-3">
+
+        <div class="srv-stack">
+          <div class="srv-card srv-card--tall" data-srv-index="6" style="--card-img:url('/assets/Growth%20Strategies.jpg')">
+            <div class="srv-card-img" aria-hidden="true"></div>
+            <div class="srv-icon" aria-hidden="true">🧩</div>
+            <div class="srv-card-body">
+              <span class="srv-num">07</span>
+              <h3 class="srv-name">Growth Strategies</h3>
+              <p class="srv-desc">Smart, custom-built roadmaps designed for sustainable long-term business growth.</p>
+              <div class="srv-meta">
+                <span class="srv-tag">Strategy</span>
+              </div>
+            </div>
+            <div class="srv-arrow" aria-hidden="true">→</div>
+            <div class="srv-card-glow" aria-hidden="true"></div>
+          </div>
+
+          <div class="srv-card srv-card--tall" data-srv-index="7" style="--card-img:url('/assets/Collaborations.jpg')">
+            <div class="srv-card-img" aria-hidden="true"></div>
+            <div class="srv-icon" aria-hidden="true">🤝</div>
+            <div class="srv-card-body">
+              <span class="srv-num">08</span>
+              <h3 class="srv-name">Collaborations</h3>
+              <p class="srv-desc">Strategic brand partnerships that expand your reach and build serious market credibility.</p>
+              <div class="srv-meta">
+                <span class="srv-tag">Collab</span>
+              </div>
+            </div>
+            <div class="srv-arrow" aria-hidden="true">→</div>
+            <div class="srv-card-glow" aria-hidden="true"></div>
+          </div>
+        </div>
+
+        <div class="srv-card srv-card--wide" data-srv-index="8" style="--card-img:url('/assets/Events.jpg')">
+          <div class="srv-card-img" aria-hidden="true"></div>
+          <div class="srv-icon" aria-hidden="true">🎪</div>
+          <div class="srv-card-body">
+            <span class="srv-num">09</span>
+            <h3 class="srv-name">Events</h3>
+            <p class="srv-desc">Memorable brand experiences, immersive activations, and unforgettable product launches that leave a lasting mark on every guest.</p>
+            <div class="srv-meta">
+              <span class="srv-tag">Events</span>
+              <span class="srv-tag srv-tag--special">IRL ✦</span>
+            </div>
+          </div>
+          <div class="srv-arrow" aria-hidden="true">→</div>
+          <div class="srv-card-glow" aria-hidden="true"></div>
+        </div>
+
+        <div class="srv-card srv-card--coming" data-srv-index="9" style="--card-img:url('/assets/Clubhouses.jpg')">
+          <div class="srv-card-img" aria-hidden="true"></div>
+          <div class="srv-card-body">
+            <span class="srv-num">10</span>
+            <h3 class="srv-name">Coming Soon</h3>
+            <p class="srv-desc">Clubhouses &amp; unique brand spaces are on the way.</p>
+            <div class="srv-meta">
+              <span class="srv-tag srv-tag--special">Soon ✦</span>
+            </div>
+          </div>
+          <div class="srv-card-glow" aria-hidden="true"></div>
+        </div>
+
+      </div>
+
+    </div><!-- /.srv-bento -->
+
+  </div><!-- /.services-container -->
 
 
 <!-- ═══════════════════════════════════
@@ -716,6 +862,38 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js" defer></script>
 <script src="js/script.js" defer></script>
 
+<script>
+const dot = document.querySelector('.cursor-dot');
+const circle = document.querySelector('.cursor-circle');
+
+let mouseX = 0;
+let mouseY = 0;
+let circleX = 0;
+let circleY = 0;
+
+// Track mouse
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+
+  dot.style.left = mouseX + 'px';
+  dot.style.top = mouseY + 'px';
+});
+
+// Smooth animation loop
+function animate() {
+  circleX += (mouseX - circleX) * 0.15;
+  circleY += (mouseY - circleY) * 0.15;
+
+  circle.style.left = circleX + 'px';
+  circle.style.top = circleY + 'px';
+
+  requestAnimationFrame(animate);
+}
+
+animate();
+</script>
+
 
 <!-- ═══════════════════════════════════
      FOOTER
@@ -737,7 +915,7 @@
 
         <div class="nx-footer-contact">
           <p>+1 800 200 900</p>
-          <p><a href="mailto:hello@thetripple.com">hello@thetripple.com</a></p>
+          <p><a href="/cdn-cgi/l/email-protection#224a474e4e4d62564a4756504b52524e470c414d4f"><span class="__cf_email__" data-cfemail="cda5a8a1a1a28db9a5a8b9bfa4bdbda1a8e3aea2a0">[email&#160;protected]</span></a></p>
         </div>
       </div>
 

@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Services — Full Agency</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/SplitText.min.js"></script>
+
+
+  <style>
+    /* ═══════════════════════════
+       TOKENS & RESET
+    ═══════════════════════════ */
+    :root {
+      --bg:        #060609;
+      --surface:   #0d0d14;
+      --border:    rgba(255,255,255,0.07);
+      --white:     #ffffff;
+      --muted:     rgba(255,255,255,0.42);
+      --dimmer:    rgba(255,255,255,0.2);
+      --accent:    #8b5cf6;
+      --accent2:   #ec4899;
+      --accent3:   #34d399;
+      --accent-glow: rgba(139,92,246,0.35);
+
+      --font-head: 'Bebas Neue', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --font-mono: 'Space Mono', monospace;
+
+      --ease-out: cubic-bezier(0.22,1,0.36,1);
+      --radius:   20px;
+      --max-w:    1280px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background: url('/assets/pexels-hobiphotography-20051576.jpg') center/cover no-repeat fixed;
+      color: var(--white);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(6,6,9,0.75);
+      z-index: 0;
+    }
+
+    img { display: block; width: 100%; }
+
+    /* ═══════════════════════════
+       CUSTOM CURSOR
+    ═══════════════════════════ */
+    #cursor-dot, #cursor-ring {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      mix-blend-mode: difference;
+      transform: translate(-50%,-50%);
+    }
+    #cursor-dot {
+      width: 8px; height: 8px;
+      background: var(--white);
+      transition: transform 0.1s;
+    }
+    #cursor-ring {
+      width: 36px; height: 36px;
+      border: 1.5px solid rgba(255,255,255,0.6);
+      transition: width 0.35s var(--ease-out),
+                  height 0.35s var(--ease-out),
+                  opacity 0.35s;
+    }
+    body:has(a:hover) #cursor-ring,
+    body:has(button:hover) #cursor-ring,
+    body:has(.srv-full-card:hover) #cursor-ring {
+      width: 64px; height: 64px; opacity: 0.5;
+    }
+
+    /* ═══════════════════════════
+       NOISE OVERLAY
+    ═══════════════════════════ */
+    .noise {
+      position: fixed;
+      inset: 0;
+      z-index: 9998;
+      pointer-events: none;
+      opacity: 0.028;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      background-size: 180px;
+    }
+
+    /* ═══════════════════════════
+       GLOBAL AMBIENT GLOW
+    ═══════════════════════════ */
+    .ambient {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 55% 40% at 20% 10%, rgba(139,92,246,0.12), transparent 65%),
+        radial-gradient(ellipse 40% 30% at 80% 80%, rgba(236,72,153,0.09), transparent 60%);
+    }
+
+    /* ============================================================
+      NAVBAR (INDEX MATCH — FULL WIDTH)
+    ============================================================ */
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 20px 0;
+      background: transparent;
+      z-index: 1000;
+      transition: padding 0.3s ease,
+                  background 0.3s ease,
+                  border-bottom 0.3s ease;
+    }
+
+    /* SCROLLED STATE */
+    .navbar.scrolled {
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 12px 0;
+    }
+
+    /* INNER WRAPPER */
+    .navbar-inner {
+      width: 100%;
+      padding: 0 clamp(20px,5vw,64px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* LEFT + RIGHT */
+    .nav-left {
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+    }
+
+    /* LOGO */
+    .logo {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    /* MENU */
+    .menu {
+      font-size: 14px;
+      color: #fff;
+      cursor: pointer;
+      min-width: 44px;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    @media (max-width: 768px) {
+      .navbar-inner {
+        padding: 0 20px;
+      }
+
+      .logo {
+        font-size: 18px;
+      }
+
+      .menu {
+        font-size: 13px;
+      }
+    }
+
+    /* ═══════════════════════════
+       HERO
+    ═══════════════════════════ */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 40%, rgba(139,92,246,0.14), transparent 65%),
+        radial-gradient(ellipse 50% 40% at 20% 90%, rgba(236,72,153,0.08), transparent 55%);
+    }
+
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 30%, transparent 80%);
+    }
+
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: clamp(15px,1.1vw,1px);
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      opacity: 0;
+    }
+    .hero-eyebrow::before, .hero-eyebrow::after {
+      content: '';
+      width: 40px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent));
+    }
+    .hero-eyebrow::after { background: linear-gradient(-90deg, transparent, var(--accent)); }
+
+    .hero-title {
+      font-family: var(--font-head);
+      font-size: clamp(72px,13vw,180px);
+      line-height: 0.93;
+      letter-spacing: -2px;
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+    }
+    .hero-title-line {
+      display: block;
+      overflow: hidden;
+    }
+    .hero-title-inner {
+      display: block;
+      background: linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0.65) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-title-inner.stroke {
+      background: none;
+      -webkit-text-fill-color: transparent;
+      -webkit-text-stroke: 1.5px rgba(255,255,255,0.35);
+    }
+
+    .hero-sub {
+      font-size: clamp(16px, 2vw, 20px); /* Increased size */
+      color: white;
+      line-height: 1.8;
+      max-width: 520px;
+      margin: 32px auto 0;
+      font-weight: 700; /* Bold */
+      opacity: 0;
+    }
+
+    .hero-scroll-cue {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+    }
+    .hero-scroll-cue span {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--dimmer);
+    }
+    .scroll-line {
+      width: 1px;
+      height: 50px;
+      background: linear-gradient(180deg, var(--accent), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%,100% { transform: scaleY(1); opacity: 1; }
+      50% { transform: scaleY(0.5); opacity: 0.4; }
+    }
+
+    /* ═══════════════════════════
+       SECTION WRAPPER
+    ═══════════════════════════ */
+    section { position: relative; z-index: 1; }
+
+
+    .section-container {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 clamp(20px,5vw,64px);
+    }
+    /* ═══════════════════════════
+       SERVICE STRIP (intro)
+    ═══════════════════════════ */
+    .strip {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      padding: 16px 0;
+    }
+    .strip-track {
+      display: flex;
+      gap: 40px;
+      width: max-content;
+      white-space: nowrap;
+      animation: stripScroll 28s linear infinite;
+      will-change: transform;
+    }
+    .strip-item {
+      font-family: var(--font-head);
+      font-size: clamp(14px,1.7vw,18px);
+      letter-spacing: 4px;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+    }
+    .strip-sep {
+      color: var(--accent);
+      font-size: 10px;
+      opacity: 0.7;
+    }
+    @keyframes stripScroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ═══════════════════════════
+       OVERVIEW NUMBERS
+    ═══════════════════════════ */
+    .overview {
+      padding: clamp(80px,10vw,140px) 0;
+    }
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 1px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--border);
+    }
+    .overview-stat {
+      background: var(--bg);
+      padding: clamp(30px,4vw,56px) clamp(24px,3vw,44px);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .overview-num {
+      font-family: var(--font-head);
+      font-size: clamp(54px,8vw,110px);
+      line-height: 0.9;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .overview-label {
+      font-family: var(--font-mono);
+      font-size: clamp(10px,1vw,12px);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .overview-desc {
+      font-size: clamp(13px,1.3vw,15px);
+      color: rgba(255,255,255,0.35);
+      line-height: 1.7;
+      margin-top: 4px;
+      font-weight: 300;
+    }
+
+    /* ═══════════════════════════
+       SECTION LABEL
+    ═══════════════════════════ */
+    .sec-label {
+      font-family: var(--font-mono);
+      font-size: clamp(10px,1vw,12px);
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: clamp(50px,6vw,90px);
+    }
+    .sec-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(139,92,246,0.4), transparent);
+    }
+
+    /* ═══════════════════════════
+       SERVICE FULL CARDS
+    ═══════════════════════════ */
+    .services-full {
+      padding: 0 0 clamp(80px,10vw,140px);
+    }
+
+    .srv-full-card {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(40px,5vw,80px);
+      align-items: center;
+      padding: clamp(60px,7vw,100px) 0;
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .srv-full-card:last-child { border-bottom: none; }
+
+    /* Alternate layout */
+    .srv-full-card:nth-child(even) .srv-content { order: 2; }
+    .srv-full-card:nth-child(even) .srv-visual  { order: 1; }
+
+    /* Ambient glow per card */
+    .srv-full-card::before {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: var(--card-glow, rgba(139,92,246,0.06));
+      filter: blur(80px);
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+    .srv-full-card:hover::before { opacity: 1; }
+
+    /* content side */
+    .srv-content {
+      position: relative;
+      z-index: 1;
+    }
+    .srv-index {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: var(--accent);
+      margin-bottom: 16px;
+      display: block;
+      opacity: 0.7;
+    }
+    .srv-full-name {
+      font-family: var(--font-head);
+      font-size: clamp(44px,6vw,84px);
+      line-height: 0.95;
+      letter-spacing: -1px;
+      color: var(--white);
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    .srv-tagline {
+      font-size: clamp(13px,1.4vw,16px);
+      color: var(--accent);
+      font-weight: 400;
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+    .srv-full-desc {
+      font-size: clamp(13px,1.4vw,15px);
+      color: var(--muted);
+      line-height: 1.85;
+      margin-bottom: 28px;
+      font-weight: 300;
+      max-width: 480px;
+    }
+    .srv-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 36px;
+    }
+    .srv-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: clamp(12px,1.2vw,14px);
+      color: rgba(255,255,255,0.55);
+      line-height: 1.5;
+    }
+    .srv-features li::before {
+      content: '→';
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .srv-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--bg);
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none;
+      border-radius: 40px;
+      padding: 13px 30px;
+      cursor: none;
+      text-decoration: none;
+      display: inline-block;
+      transition: transform 0.3s var(--ease-out), box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-primary::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.15);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(139,92,246,0.5);
+    }
+    .btn-primary:hover::after { opacity: 1; }
+
+    .btn-ghost {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+
+      color: rgba(255,255,255,0.55); /* FIX: better visibility */
+
+      background: rgba(255,255,255,0.04); /* subtle glass effect */
+      border: 1px solid rgba(255,255,255,0.08);
+
+      padding: 10px 18px; /* FIX: clickable area */
+      border-radius: 30px;
+
+      cursor: pointer; /* FIX: restore pointer */
+
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+
+      transition: all 0.3s var(--ease-out);
+    }
+
+    .btn-ghost:hover {
+      color: var(--white);
+      border-color: rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.08);
+      gap: 14px;
+    }
+
+    .btn-ghost .arrow {
+      transition: transform 0.3s var(--ease-out);
+    }
+
+    .btn-ghost:hover .arrow {
+      transform: translateX(6px);
+    }
+
+    /* Visual side */
+    .srv-visual {
+      position: relative;
+      z-index: 1;
+      border-radius: var(--radius);
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      border: 1px solid var(--border);
+    }
+    .srv-visual-bg {
+      position: absolute;
+      inset: 0;
+      background-image: var(--img);
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.8s var(--ease-out), opacity 0.4s;
+      opacity: 0.65;
+    }
+    .srv-visual::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, rgba(6,6,9,0.1) 0%, rgba(6,6,9,0.7) 100%);
+      z-index: 1;
+    }
+    .srv-full-card:hover .srv-visual-bg {
+      transform: scale(1.06);
+      opacity: 0.8;
+    }
+
+    /* Number watermark */
+    .srv-watermark {
+      position: absolute;
+      top: 50%;
+      right: clamp(20px,3vw,44px);
+      transform: translateY(-50%);
+      font-family: var(--font-head);
+      font-size: clamp(100px,14vw,200px);
+      line-height: 1;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255,255,255,0.04);
+      pointer-events: none;
+      z-index: 0;
+      user-select: none;
+    }
+    .srv-full-card:nth-child(even) .srv-watermark {
+      right: auto;
+      left: clamp(20px,3vw,44px);
+    }
+
+    /* Icon badge */
+    .srv-badge {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      z-index: 3;
+      width: 52px; height: 52px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      transition: transform 0.4s var(--ease-out);
+    }
+    .srv-full-card:hover .srv-badge {
+      transform: scale(1.1) rotate(-5deg);
+    }
+
+    /* Tags in visual */
+    .srv-visual-tags {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      z-index: 3;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .v-tag {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid rgba(139,92,246,0.35);
+      border-radius: 40px;
+      padding: 5px 12px;
+      background: rgba(6,6,9,0.6);
+      backdrop-filter: blur(10px);
+    }
+    .v-tag.pink {
+      color: var(--accent2);
+      border-color: rgba(236,72,153,0.35);
+    }
+    .v-tag.green {
+      color: var(--accent3);
+      border-color: rgba(52,211,153,0.35);
+    }
+
+    /* ═══════════════════════════
+       PROCESS SECTION
+    ═══════════════════════════ */
+    .process-sec {
+      padding: clamp(80px,10vw,140px) 0;
+      border-top: 1px solid var(--border);
+    }
+    .process-head {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(40px,5vw,80px);
+      align-items: end;
+      margin-bottom: clamp(60px,7vw,100px);
+    }
+    .process-title {
+      font-family: var(--font-head);
+      font-size: clamp(46px,7vw,96px);
+      line-height: 0.93;
+    }
+    .process-title span {
+      display: block;
+      -webkit-text-stroke: 1.5px rgba(255,255,255,0.35);
+      -webkit-text-fill-color: transparent;
+    }
+    .process-intro {
+      font-size: clamp(13px,1.4vw,15px);
+      color: var(--muted);
+      line-height: 1.8;
+      font-weight: 300;
+    }
+
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .process-step {
+      background: var(--bg);
+      padding: clamp(28px,3.5vw,48px) clamp(22px,2.5vw,36px);
+      position: relative;
+      overflow: hidden;
+      transition: background 0.4s;
+    }
+    .process-step:hover { background: rgba(139,92,246,0.04); }
+    .process-step-num {
+      font-family: var(--font-head);
+      font-size: clamp(52px,6vw,80px);
+      line-height: 1;
+      color: rgba(255,255,255,0.06);
+      position: absolute;
+      top: 16px; right: 16px;
+    }
+    .process-step-icon {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+    .process-step-title {
+      font-family: var(--font-head);
+      font-size: clamp(20px,2.2vw,28px);
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+    }
+    .process-step-desc {
+      font-size: clamp(12px,1.2vw,14px);
+      color: var(--muted);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+    .process-step-bar {
+      margin-top: 24px;
+      height: 2px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .process-step-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 2px;
+      width: 0;
+      transition: width 1.2s var(--ease-out);
+    }
+
+    /* ═══════════════════════════
+       CTA SECTION
+    ═══════════════════════════ */
+    .cta-sec {
+      padding: clamp(100px,12vw,160px) 0;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-sec::before {
+      content: '';
+      position: absolute;
+      width: 700px; height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(139,92,246,0.12), transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      pointer-events: none;
+    }
+    .cta-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 24px;
+      opacity: 0;
+    }
+    .cta-title {
+      font-family: var(--font-head);
+      font-size: clamp(56px,9vw,128px);
+      line-height: 0.92;
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+    .cta-sub {
+      font-size: clamp(13px,1.4vw,16px);
+      color: var(--muted);
+      max-width: 460px;
+      margin: 0 auto 48px;
+      line-height: 1.8;
+      font-weight: 300;
+      opacity: 0;
+    }
+    .cta-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      opacity: 0;
+    }
+    .btn-xl {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--bg);
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none;
+      border-radius: 50px;
+      padding: 18px 44px;
+      cursor: none;
+      text-decoration: none;
+      display: inline-block;
+      transition: transform 0.3s var(--ease-out), box-shadow 0.3s;
+    }
+    .btn-xl:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(139,92,246,0.55);
+    }
+    .btn-xl-ghost {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--dimmer);
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 18px 44px;
+      cursor: none;
+      text-decoration: none;
+      display: inline-block;
+      transition: border-color 0.3s, color 0.3s;
+    }
+    .btn-xl-ghost:hover {
+      border-color: rgba(255,255,255,0.25);
+      color: var(--white);
+    }
+
+
+    /* ═══════════════════════════
+       RESPONSIVE
+    ═══════════════════════════ */
+    @media (max-width: 1024px) {
+      .process-steps { grid-template-columns: repeat(2,1fr); }
+    }
+
+    @media (max-width: 768px) {
+      body { cursor: auto; }
+      #cursor-dot, #cursor-ring { display: none; }
+
+      .srv-full-card {
+        grid-template-columns: 1fr;
+      }
+      .srv-full-card:nth-child(even) .srv-content,
+      .srv-full-card:nth-child(even) .srv-visual { order: unset; }
+      .srv-watermark { display: none; }
+
+      .process-head { grid-template-columns: 1fr; }
+      .process-steps { grid-template-columns: 1fr 1fr; }
+
+      .overview-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .process-steps { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
+<!-- Noise -->
+<div class="noise" aria-hidden="true"></div>
+<div class="ambient" aria-hidden="true"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar fixed-top" id="navbar">
+  <div class="container d-flex justify-content-between align-items-center">
+    
+    <h2 class="logo">TheTripple</h2>
+
+    <div class="menu">
+      <a href="/">Home</a>
+    </div>
+
+  </div>
+</nav>
+
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero" id="hero">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="hero-grid" aria-hidden="true"></div>
+
+  <p class="hero-eyebrow" id="hero-eyebrow">Our Services</p>
+
+  <h1 class="hero-title" id="hero-title">
+    <span class="hero-title-line"><span class="hero-title-inner" id="ht-1">What We</span></span>
+    <span class="hero-title-line"><span class="hero-title-inner" id="ht-2">Build For</span></span>
+    <span class="hero-title-line"><span class="hero-title-inner stroke" id="ht-3">You.</span></span>
+  </h1>
+
+  <p class="hero-sub" id="hero-sub">
+    From strategy to execution — every service we offer is designed to make your brand unforgettable, your growth unstoppable, and your vision inevitable.
+  </p>
+
+  <div class="hero-scroll-cue" id="scroll-cue">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- ══════════ STRIP ══════════ -->
+<div class="strip" aria-hidden="true">
+  <div class="strip-track">
+    <span class="strip-item">Websites</span><span class="strip-sep">✦</span>
+    <span class="strip-item">Content Creation</span><span class="strip-sep">✦</span>
+    <span class="strip-item">Posters & Design</span><span class="strip-sep">✦</span>
+    <span class="strip-item">Social Media</span><span class="strip-sep">✦</span>
+    <span class="strip-item">Video & Photoshoots</span><span class="strip-sep">✦</span>
+    <span class="strip-item">Digital Marketing</span><span class="strip-sep">✦</span>
+    <span class="strip-item">Growth Strategies</span><span class="strip-sep">✦</span>
+    <span class="strip-item">Collaborations</span><span class="strip-sep">✦</span>
+    <span class="strip-item">Events</span><span class="strip-sep">✦</span>
+    <span class="strip-item">Websites</span><span class="strip-sep">✦</span>
+    <span class="strip-item">Content Creation</span><span class="strip-sep">✦</span>
+    <span class="strip-item">Posters & Design</span><span class="strip-sep">✦</span>
+    <span class="strip-item">Social Media</span><span class="strip-sep">✦</span>
+    <span class="strip-item">Video & Photoshoots</span><span class="strip-sep">✦</span>
+    <span class="strip-item">Digital Marketing</span><span class="strip-sep">✦</span>
+    <span class="strip-item">Growth Strategies</span><span class="strip-sep">✦</span>
+    <span class="strip-item">Collaborations</span><span class="strip-sep">✦</span>
+    <span class="strip-item">Events</span><span class="strip-sep">✦</span>
+  </div>
+</div>
+
+<!-- ══════════ OVERVIEW ══════════ -->
+<section class="overview">
+  <div class="container">
+    <div class="overview-grid">
+      <div class="overview-stat">
+        <span class="overview-num" data-count="9">0</span>
+        <span class="overview-label">Core Services</span>
+        <p class="overview-desc">Everything a brand needs to grow, all under one creative roof.</p>
+      </div>
+      <div class="overview-stat">
+        <span class="overview-num" data-count="200">0</span>
+        <span class="overview-label">Projects Delivered</span>
+        <p class="overview-desc">Brands launched, campaigns fired, revenue generated.</p>
+      </div>
+      <div class="overview-stat">
+        <span class="overview-num" data-count="100">0</span>
+        <span class="overview-label">% Creative Output</span>
+        <p class="overview-desc">No templates. No shortcuts. Always original, always premium.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ SERVICES FULL ══════════ -->
+<section class="services-full">
+  <div class="container">
+    <div class="sec-label">All Services</div>
+
+    <!-- 01 Websites -->
+    <article class="srv-full-card" data-card="0" style="--card-glow:rgba(139,92,246,0.08)">
+      <div class="srv-watermark">01</div>
+      <div class="srv-content">
+        <span class="srv-index">01 — Web</span>
+        <h2 class="srv-full-name">Websites</h2>
+        <p class="srv-tagline">"Your digital storefront, engineered to convert."</p>
+        <p class="srv-full-desc">We don't build websites — we build digital experiences. Every line of code is crafted to turn visitors into customers, browsers into believers, and clicks into revenue. Performance, aesthetics, and strategy fused into one.</p>
+        <ul class="srv-features">
+          <li>Custom design tailored to your brand identity</li>
+          <li>Blazing-fast performance & Core Web Vitals optimized</li>
+          <li>Mobile-first, fully responsive across all devices</li>
+          <li>CMS integration (Webflow, WordPress, Sanity, etc.)</li>
+          <li>Conversion-optimized landing pages</li>
+          <li>E-commerce & booking systems</li>
+        </ul>
+        <div class="srv-actions">
+          <a href="#" class="btn-primary">Get Started</a>
+          <a href="#" class="btn-ghost">View Work <span class="arrow">→</span></a>
+        </div>
+      </div>
+      <div class="srv-visual" style="--img: url('https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=800&q=80')">
+        <div class="srv-visual-bg"></div>
+        <div class="srv-visual-tags">
+          <span class="v-tag">Web</span>
+          <span class="v-tag green">Dev + Design</span>
+        </div>
+        <div class="srv-badge">🌐</div>
+      </div>
+    </article>
+
+    <!-- 02 Content Creation -->
+    <article class="srv-full-card" data-card="1" style="--card-glow:rgba(236,72,153,0.07)">
+      <div class="srv-watermark">02</div>
+      <div class="srv-content">
+        <span class="srv-index">02 — Content</span>
+        <h2 class="srv-full-name">Content Creation</h2>
+        <p class="srv-tagline">"Words and visuals that move people."</p>
+        <p class="srv-full-desc">Great content doesn't just fill space — it builds authority, drives discovery, and creates genuine connection. We produce high-quality, on-brand content that educates, entertains, and inspires action across every channel you operate in.</p>
+        <ul class="srv-features">
+          <li>Blog posts, articles & long-form editorial</li>
+          <li>Social media content calendars & captions</li>
+          <li>Email newsletters & drip sequences</li>
+          <li>Scriptwriting for video & podcast</li>
+          <li>Brand voice development & guidelines</li>
+          <li>SEO-optimized content strategy</li>
+        </ul>
+        <div class="srv-actions">
+          <a href="#" class="btn-primary">Get Started</a>
+          <a href="#" class="btn-ghost">View Work <span class="arrow">→</span></a>
+        </div>
+      </div>
+      <div class="srv-visual" style="--img: url('https://images.unsplash.com/photo-1455390582262-044cdead277a?w=800&q=80')">
+        <div class="srv-visual-bg"></div>
+        <div class="srv-visual-tags">
+          <span class="v-tag">Content</span>
+          <span class="v-tag pink">Strategy</span>
+        </div>
+        <div class="srv-badge">✍️</div>
+      </div>
+    </article>
+
+    <!-- 03 Posters & Designs -->
+    <article class="srv-full-card" data-card="2" style="--card-glow:rgba(52,211,153,0.06)">
+      <div class="srv-watermark">03</div>
+      <div class="srv-content">
+        <span class="srv-index">03 — Design</span>
+        <h2 class="srv-full-name">Posters &amp; Designs</h2>
+        <p class="srv-tagline">"Visuals that stop the scroll. Every time."</p>
+        <p class="srv-full-desc">In a world drowning in content, only exceptional design breaks through. We create visually stunning creatives — from event posters to brand collateral — that carry your message with impact and beauty that demands attention the moment it's seen.</p>
+        <ul class="srv-features">
+          <li>Event & campaign poster design</li>
+          <li>Brand identity systems & logo design</li>
+          <li>Social media templates & ad creatives</li>
+          <li>Merchandise & print-ready artwork</li>
+          <li>Pitch deck & presentation design</li>
+          <li>Motion graphics & animated assets</li>
+        </ul>
+        <div class="srv-actions">
+          <a href="#" class="btn-primary">Get Started</a>
+          <a href="#" class="btn-ghost">View Work <span class="arrow">→</span></a>
+        </div>
+      </div>
+      <div class="srv-visual" style="--img: url('https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&q=80')">
+        <div class="srv-visual-bg"></div>
+        <div class="srv-visual-tags">
+          <span class="v-tag green">Design</span>
+          <span class="v-tag">Visual Identity</span>
+        </div>
+        <div class="srv-badge">🎨</div>
+      </div>
+    </article>
+
+    <!-- 04 Social Media -->
+    <article class="srv-full-card" data-card="3" style="--card-glow:rgba(139,92,246,0.09)">
+      <div class="srv-watermark">04</div>
+      <div class="srv-content">
+        <span class="srv-index">04 — Social</span>
+        <h2 class="srv-full-name">Social Media</h2>
+        <p class="srv-tagline">"Dominate the feed. Build real community."</p>
+        <p class="srv-full-desc">Social media is the most powerful brand-building tool alive — when used with strategy. We manage your presence across every platform with data-informed content, consistent engagement, and a brand voice so distinct people recognize you before they even see your name.</p>
+        <ul class="srv-features">
+          <li>Full-platform management (Instagram, TikTok, LinkedIn, X)</li>
+          <li>Content calendar planning & scheduling</li>
+          <li>Community management & audience engagement</li>
+          <li>Reels, stories & short-form video production</li>
+          <li>Analytics reporting & growth insights</li>
+          <li>Influencer identification & outreach</li>
+        </ul>
+        <div class="srv-actions">
+          <a href="#" class="btn-primary">Get Started</a>
+          <a href="#" class="btn-ghost">View Work <span class="arrow">→</span></a>
+        </div>
+      </div>
+      <div class="srv-visual" style="--img: url('https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=800&q=80')">
+        <div class="srv-visual-bg"></div>
+        <div class="srv-visual-tags">
+          <span class="v-tag">Social</span>
+          <span class="v-tag green">Growth</span>
+        </div>
+        <div class="srv-badge">📱</div>
+      </div>
+    </article>
+
+    <!-- 05 Video & Photoshoots -->
+    <article class="srv-full-card" data-card="4" style="--card-glow:rgba(236,72,153,0.08)">
+      <div class="srv-watermark">05</div>
+      <div class="srv-content">
+        <span class="srv-index">05 — Media</span>
+        <h2 class="srv-full-name">Video &amp; Photoshoots</h2>
+        <p class="srv-tagline">"Cinematic storytelling for modern brands."</p>
+        <p class="srv-full-desc">The most powerful brands tell their story through image and motion. Our production team handles everything — concept, shoot, edit — delivering cinematic visuals and professional photography that transform how the world sees your brand.</p>
+        <ul class="srv-features">
+          <li>Brand films & campaign video production</li>
+          <li>Product photography & lifestyle shoots</li>
+          <li>Short-form video for social & ads</li>
+          <li>Behind-the-scenes & event coverage</li>
+          <li>Drone cinematography</li>
+          <li>Color grading & professional post-production</li>
+        </ul>
+        <div class="srv-actions">
+          <a href="#" class="btn-primary">Get Started</a>
+          <a href="#" class="btn-ghost">View Work <span class="arrow">→</span></a>
+        </div>
+      </div>
+      <div class="srv-visual" style="--img: url('https://images.unsplash.com/photo-1493548578639-b0c241186eb0?w=800&q=80')">
+        <div class="srv-visual-bg"></div>
+        <div class="srv-visual-tags">
+          <span class="v-tag">Media</span>
+          <span class="v-tag pink">Cinematic</span>
+        </div>
+        <div class="srv-badge">🎬</div>
+      </div>
+    </article>
+
+    <!-- 06 Digital Marketing -->
+    <article class="srv-full-card" data-card="5" style="--card-glow:rgba(139,92,246,0.08)">
+      <div class="srv-watermark">06</div>
+      <div class="srv-content">
+        <span class="srv-index">06 — Marketing</span>
+        <h2 class="srv-full-name">Digital Marketing</h2>
+        <p class="srv-tagline">"Data-driven campaigns that actually scale."</p>
+        <p class="srv-full-desc">Marketing without data is just guessing. We run performance-focused digital campaigns — paid ads, SEO, email, and full-funnel strategy — built on real insights and optimized relentlessly to maximize your return on every rupee spent.</p>
+        <ul class="srv-features">
+          <li>Google Ads, Meta Ads & programmatic campaigns</li>
+          <li>SEO strategy, on-page & technical optimization</li>
+          <li>Email marketing & automation flows</li>
+          <li>Full-funnel campaign architecture</li>
+          <li>A/B testing & conversion rate optimization</li>
+          <li>Monthly performance reporting & insights</li>
+        </ul>
+        <div class="srv-actions">
+          <a href="#" class="btn-primary">Get Started</a>
+          <a href="#" class="btn-ghost">View Work <span class="arrow">→</span></a>
+        </div>
+      </div>
+      <div class="srv-visual" style="--img: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80')">
+        <div class="srv-visual-bg"></div>
+        <div class="srv-visual-tags">
+          <span class="v-tag">Marketing</span>
+          <span class="v-tag green">ROI</span>
+        </div>
+        <div class="srv-badge">📈</div>
+      </div>
+    </article>
+
+    <!-- 07 Growth Strategies -->
+    <article class="srv-full-card" data-card="6" style="--card-glow:rgba(52,211,153,0.07)">
+      <div class="srv-watermark">07</div>
+      <div class="srv-content">
+        <span class="srv-index">07 — Strategy</span>
+        <h2 class="srv-full-name">Growth Strategies</h2>
+        <p class="srv-tagline">"A clear roadmap from where you are to where you want to be."</p>
+        <p class="srv-full-desc">Sustainable growth doesn't happen by accident. We build custom, data-backed growth strategies that align your brand, marketing, and operations — giving you a clear, executable roadmap for long-term success and market dominance.</p>
+        <ul class="srv-features">
+          <li>Brand & market positioning analysis</li>
+          <li>Customer acquisition & retention frameworks</li>
+          <li>Go-to-market strategy for new launches</li>
+          <li>Competitive landscape mapping</li>
+          <li>Revenue model & pricing strategy</li>
+          <li>Quarterly growth planning & OKR setting</li>
+        </ul>
+        <div class="srv-actions">
+          <a href="#" class="btn-primary">Get Started</a>
+          <a href="#" class="btn-ghost">View Work <span class="arrow">→</span></a>
+        </div>
+      </div>
+      <div class="srv-visual" style="--img: url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80')">
+        <div class="srv-visual-bg"></div>
+        <div class="srv-visual-tags">
+          <span class="v-tag green">Strategy</span>
+          <span class="v-tag">Growth</span>
+        </div>
+        <div class="srv-badge">🧩</div>
+      </div>
+    </article>
+
+    <!-- 08 Collaborations -->
+    <article class="srv-full-card" data-card="7" style="--card-glow:rgba(236,72,153,0.07)">
+      <div class="srv-watermark">08</div>
+      <div class="srv-content">
+        <span class="srv-index">08 — Collab</span>
+        <h2 class="srv-full-name">Collaborations</h2>
+        <p class="srv-tagline">"The right partnership changes everything."</p>
+        <p class="srv-full-desc">Brand collaborations are the fastest way to reach new audiences and build serious market credibility. We identify, negotiate, and manage strategic partnerships — from co-branded campaigns to influencer deals — that amplify your reach exponentially.</p>
+        <ul class="srv-features">
+          <li>Brand-to-brand collaboration strategy</li>
+          <li>Influencer & creator partnership management</li>
+          <li>Co-branded campaign development</li>
+          <li>Partnership deal structuring & negotiation</li>
+          <li>Cross-promotional content production</li>
+          <li>Campaign tracking & ROI measurement</li>
+        </ul>
+        <div class="srv-actions">
+          <a href="#" class="btn-primary">Get Started</a>
+          <a href="#" class="btn-ghost">View Work <span class="arrow">→</span></a>
+        </div>
+      </div>
+      <div class="srv-visual" style="--img: url('https://images.unsplash.com/photo-1521791136064-7986c2920216?w=800&q=80')">
+        <div class="srv-visual-bg"></div>
+        <div class="srv-visual-tags">
+          <span class="v-tag pink">Collab</span>
+          <span class="v-tag">Partnerships</span>
+        </div>
+        <div class="srv-badge">🤝</div>
+      </div>
+    </article>
+
+    <!-- 09 Events -->
+    <article class="srv-full-card" data-card="8" style="--card-glow:rgba(139,92,246,0.1)">
+      <div class="srv-watermark">09</div>
+      <div class="srv-content">
+        <span class="srv-index">09 — Events</span>
+        <h2 class="srv-full-name">Events</h2>
+        <p class="srv-tagline">"Experiences people talk about for years."</p>
+        <p class="srv-full-desc">In the age of digital saturation, real-world experiences are more powerful than ever. We design and execute immersive brand events — from intimate launches to large-scale activations — that create lasting emotional connections between your brand and your audience.</p>
+        <ul class="srv-features">
+          <li>Event concept & experience design</li>
+          <li>Product launches & brand activations</li>
+          <li>Pop-ups & immersive retail experiences</li>
+          <li>End-to-end production & logistics</li>
+          <li>Live entertainment & performer curation</li>
+          <li>Post-event content capture & amplification</li>
+        </ul>
+        <div class="srv-actions">
+          <a href="#" class="btn-primary">Get Started</a>
+          <a href="#" class="btn-ghost">View Work <span class="arrow">→</span></a>
+        </div>
+      </div>
+      <div class="srv-visual" style="--img: url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80')">
+        <div class="srv-visual-bg"></div>
+        <div class="srv-visual-tags">
+          <span class="v-tag">Events</span>
+          <span class="v-tag pink">IRL ✦</span>
+        </div>
+        <div class="srv-badge">🎪</div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ══════════ PROCESS ══════════ -->
+<section class="process-sec">
+  <div class="container">
+    <div class="process-head">
+      <div>
+        <h2 class="process-title" id="process-title">
+          How We<br><span>Work.</span>
+        </h2>
+      </div>
+      <p class="process-intro" id="process-intro">
+        Every great outcome starts with a clear process. We follow a proven four-phase system that keeps every project on time, on brand, and above expectation — every single time.
+      </p>
+    </div>
+
+    <div class="process-steps">
+      <div class="process-step">
+        <span class="process-step-num">01</span>
+        <div class="process-step-icon">🔍</div>
+        <h3 class="process-step-title">Discover</h3>
+        <p class="process-step-desc">Deep dive into your brand, goals, audience, and competitors. We ask the right questions to uncover the insights that shape everything.</p>
+        <div class="process-step-bar"><div class="process-step-fill" data-width="90"></div></div>
+      </div>
+      <div class="process-step">
+        <span class="process-step-num">02</span>
+        <div class="process-step-icon">💡</div>
+        <h3 class="process-step-title">Strategize</h3>
+        <p class="process-step-desc">We build a clear plan of attack — creative direction, timelines, and deliverables — before a single pixel is designed or a word is written.</p>
+        <div class="process-step-bar"><div class="process-step-fill" data-width="75"></div></div>
+      </div>
+      <div class="process-step">
+        <span class="process-step-num">03</span>
+        <div class="process-step-icon">⚡</div>
+        <h3 class="process-step-title">Execute</h3>
+        <p class="process-step-desc">Our team moves fast, stays accountable, and produces work that exceeds the brief. Every detail refined until it's exactly right.</p>
+        <div class="process-step-bar"><div class="process-step-fill" data-width="95"></div></div>
+      </div>
+      <div class="process-step">
+        <span class="process-step-num">04</span>
+        <div class="process-step-icon">📊</div>
+        <h3 class="process-step-title">Optimize</h3>
+        <p class="process-step-desc">Launch is just the beginning. We track, measure, and continuously improve so your investment keeps compounding over time.</p>
+        <div class="process-step-bar"><div class="process-step-fill" data-width="80"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ CTA ══════════ -->
+<section class="cta-sec">
+  <div class="container">
+    <p class="cta-eyebrow" id="cta-eyebrow">Ready to Start?</p>
+    <h2 class="cta-title" id="cta-title">
+      <span class="cta-line-wrap" style="overflow:hidden;display:block"><span id="ct-1" style="display:block">Let's Build</span></span>
+      <span class="cta-line-wrap" style="overflow:hidden;display:block"><span id="ct-2" style="display:block">Something</span></span>
+      <span class="cta-line-wrap" style="overflow:hidden;display:block"><span id="ct-3" style="display:block;-webkit-text-stroke:1.5px rgba(255,255,255,0.35);-webkit-text-fill-color:transparent">Great.</span></span>
+    </h2>
+    <p class="cta-sub" id="cta-sub">Tell us about your project and we'll have a proposal ready within 48 hours. No fluff, no filler — just results.</p>
+    <div class="cta-actions" id="cta-actions">
+      <a href="#" class="btn-xl">Start a Project</a>
+      <a href="#" class="btn-xl-ghost">Book a Call</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     FOOTER
+═══════════════════════════════════ -->
+<footer class="nx-footer">
+
+  <div class="nx-footer-main">
+
+    <div class="nx-footer-container">
+
+      <!-- LEFT — Brand -->
+      <div class="nx-footer-col nx-footer-brand">
+        <h3 class="nx-footer-logo">TheTripple</h3>
+
+        <p class="nx-footer-text">
+          3940 Sorrento Digital Way<br>
+          Bangalore, India
+        </p>
+
+        <div class="nx-footer-contact">
+          <p>+1 800 200 900</p>
+          <p><a href="/cdn-cgi/l/email-protection#224a474e4e4d62564a4756504b52524e470c414d4f"><span class="__cf_email__" data-cfemail="cda5a8a1a1a28db9a5a8b9bfa4bdbda1a8e3aea2a0">[email&#160;protected]</span></a></p>
+        </div>
+      </div>
+
+      <!-- LINKS -->
+      <div class="nx-footer-col nx-footer-links">
+
+        <div class="nx-footer-group">
+          <h4>Quick Links</h4>
+          <a href="#">Pricing</a>
+          <a href="#">Resources</a>
+          <a href="#">About Us</a>
+          <a href="#">API</a>
+        </div>
+
+        <div class="nx-footer-group">
+          <h4>Social</h4>
+          <a href="#">Instagram</a>
+          <a href="#">LinkedIn</a>
+          <a href="#">Twitter</a>
+          <a href="#">YouTube</a>
+        </div>
+
+        <div class="nx-footer-group">
+          <h4>Legal</h4>
+          <a href="#">Terms</a>
+          <a href="#">Privacy</a>
+          <a href="#">Cookies</a>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="nx-footer-bottom">
+      <p>&copy; 2026 TheTripple. All rights reserved.</p>
+    </div>
+
+  </div>
+
+</footer>
+
+
+
+<!-- ══════════ JS ══════════ -->
+<script>
+/* ─── CURSOR ─── */
+const dot  = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+window.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  dot.style.left  = mx + 'px';
+  dot.style.top   = my + 'px';
+});
+
+function animateCursor() {
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px';
+  ring.style.top  = ry + 'px';
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+
+
+/* ─── GSAP + ScrollTrigger ─── */
+gsap.registerPlugin(ScrollTrigger);
+
+/* HERO animations */
+gsap.to('#hero-eyebrow', { opacity: 1, y: 0, duration: 1, delay: 0.3, ease: 'power3.out' });
+gsap.from('#ht-1', { yPercent: 110, duration: 1,   delay: 0.5,  ease: 'power4.out' });
+gsap.from('#ht-2', { yPercent: 110, duration: 1,   delay: 0.65, ease: 'power4.out' });
+gsap.from('#ht-3', { yPercent: 110, duration: 1,   delay: 0.8,  ease: 'power4.out' });
+gsap.to('#hero-sub',    { opacity: 1, y: 0, duration: 1, delay: 1.1,  ease: 'power3.out' });
+gsap.to('#scroll-cue',  { opacity: 1, y: 0, duration: 1, delay: 1.4,  ease: 'power3.out' });
+
+/* Subtle hero BG parallax */
+gsap.to('.hero-bg', {
+  yPercent: 30,
+  ease: 'none',
+  scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+});
+gsap.to('.hero-grid', {
+  yPercent: 20,
+  ease: 'none',
+  scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+});
+
+/* OVERVIEW counters */
+document.querySelectorAll('.overview-num').forEach(el => {
+  const target = parseInt(el.dataset.count);
+  ScrollTrigger.create({
+    trigger: el,
+    start: 'top 85%',
+    once: true,
+    onEnter: () => {
+      gsap.to({}, {
+        duration: 1.8,
+        ease: 'power2.out',
+        onUpdate: function() {
+          el.textContent = Math.round(this.progress() * target) + (target === 100 ? '%' : '+');
+        }
+      });
+    }
+  });
+});
+
+/* Overview stats fade */
+gsap.from('.overview-stat', {
+  opacity: 0,
+  y: 40,
+  stagger: 0.15,
+  duration: 0.9,
+  ease: 'power3.out',
+  scrollTrigger: { trigger: '.overview-grid', start: 'top 80%' }
+});
+
+/* Service cards reveal */
+document.querySelectorAll('.srv-full-card').forEach((card, i) => {
+  const isEven = i % 2 === 1;
+  const content = card.querySelector('.srv-content');
+  const visual  = card.querySelector('.srv-visual');
+
+  gsap.from(content, {
+    opacity: 0,
+    x: isEven ? 60 : -60,
+    duration: 1,
+    ease: 'power3.out',
+    scrollTrigger: { trigger: card, start: 'top 75%', once: true }
+  });
+
+  gsap.from(visual, {
+    opacity: 0,
+    x: isEven ? -60 : 60,
+    duration: 1,
+    delay: 0.15,
+    ease: 'power3.out',
+    scrollTrigger: { trigger: card, start: 'top 75%', once: true }
+  });
+
+  /* Subtle visual parallax */
+  const bg = card.querySelector('.srv-visual-bg');
+  if (bg) {
+    gsap.to(bg, {
+      yPercent: -12,
+      ease: 'none',
+      scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: true }
+    });
+  }
+});
+
+/* Watermark parallax */
+document.querySelectorAll('.srv-watermark').forEach(wm => {
+  gsap.from(wm, {
+    opacity: 0,
+    scale: 0.85,
+    scrollTrigger: { trigger: wm.closest('article'), start: 'top 80%', once: true },
+    duration: 1.2,
+    ease: 'power3.out'
+  });
+});
+
+/* Process section */
+gsap.from('#process-title', {
+  opacity: 0, y: 50, duration: 1, ease: 'power3.out',
+  scrollTrigger: { trigger: '#process-title', start: 'top 80%', once: true }
+});
+gsap.from('#process-intro', {
+  opacity: 0, y: 30, duration: 1, delay: 0.2, ease: 'power3.out',
+  scrollTrigger: { trigger: '#process-intro', start: 'top 80%', once: true }
+});
+
+gsap.from('.process-step', {
+  opacity: 0,
+  y: 50,
+  stagger: 0.1,
+  duration: 0.8,
+  ease: 'power3.out',
+  scrollTrigger: { trigger: '.process-steps', start: 'top 78%', once: true }
+});
+
+/* Progress bars */
+document.querySelectorAll('.process-step-fill').forEach(bar => {
+  ScrollTrigger.create({
+    trigger: bar,
+    start: 'top 85%',
+    once: true,
+    onEnter: () => {
+      gsap.to(bar, {
+        width: bar.dataset.width + '%',
+        duration: 1.4,
+        delay: 0.2,
+        ease: 'power3.out'
+      });
+    }
+  });
+});
+
+/* CTA section */
+gsap.to('#cta-eyebrow', {
+  opacity: 1, duration: 0.8, ease: 'power2.out',
+  scrollTrigger: { trigger: '.cta-sec', start: 'top 80%', once: true }
+});
+gsap.from('#ct-1', {
+  yPercent: 110, duration: 1, delay: 0.1, ease: 'power4.out',
+  scrollTrigger: { trigger: '.cta-sec', start: 'top 78%', once: true }
+});
+gsap.from('#ct-2', {
+  yPercent: 110, duration: 1, delay: 0.22, ease: 'power4.out',
+  scrollTrigger: { trigger: '.cta-sec', start: 'top 78%', once: true }
+});
+gsap.from('#ct-3', {
+  yPercent: 110, duration: 1, delay: 0.34, ease: 'power4.out',
+  scrollTrigger: { trigger: '.cta-sec', start: 'top 78%', once: true }
+});
+gsap.to('#cta-sub', {
+  opacity: 1, y: 0, duration: 0.9, delay: 0.5, ease: 'power3.out',
+  scrollTrigger: { trigger: '.cta-sec', start: 'top 78%', once: true }
+});
+gsap.to('#cta-actions', {
+  opacity: 1, y: 0, duration: 0.9, delay: 0.7, ease: 'power3.out',
+  scrollTrigger: { trigger: '.cta-sec', start: 'top 78%', once: true }
+});
+
+/* Sec label line */
+gsap.from('.sec-label', {
+  opacity: 0, x: -30, duration: 0.9, ease: 'power3.out',
+  scrollTrigger: { trigger: '.sec-label', start: 'top 85%', once: true }
+});
+
+/* Feature list stagger */
+document.querySelectorAll('.srv-features').forEach(list => {
+  gsap.from(list.querySelectorAll('li'), {
+    opacity: 0, x: -20, stagger: 0.08, duration: 0.6, ease: 'power2.out',
+    scrollTrigger: { trigger: list, start: 'top 82%', once: true }
+  });
+});
+
+/* Buttons */
+document.querySelectorAll('.srv-actions').forEach(actions => {
+  gsap.from(actions.children, {
+    opacity: 0, y: 20, stagger: 0.1, duration: 0.7, ease: 'power2.out',
+    scrollTrigger: { trigger: actions, start: 'top 88%', once: true }
+  });
+});
+
+/* Ambient glow follow on desktop */
+if (window.innerWidth > 768) {
+  document.querySelectorAll('.srv-full-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      const x = e.clientX - r.left;
+      const y = e.clientY - r.top;
+      card.style.setProperty('--gx', x + 'px');
+      card.style.setProperty('--gy', y + 'px');
+    });
+  });
+}
+
+/* Pause ticker on hover */
+const track = document.querySelector('.strip-track');
+document.querySelector('.strip').addEventListener('mouseenter', () => track.style.animationPlayState = 'paused');
+document.querySelector('.strip').addEventListener('mouseleave', () => track.style.animationPlayState = 'running');
+
+/* Refresh ST on load */
+window.addEventListener('load', () => ScrollTrigger.refresh());
+
+const navbar = document.getElementById("navbar");
+
+window.addEventListener("scroll", () => {
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+  if (scrollTop > 40) {
+    navbar.classList.add("scrolled");
+  } else {
+    navbar.classList.remove("scrolled");
+  }
+});
+</script>
+
+</body>
+</html>

@@ -175,84 +175,66 @@ function initScrollAnimations() {
   // by resetting opacity and transform to their final/natural values.
   if (!isMobile()) {
 
-  // ── SERVICES HORIZONTAL SCROLL — desktop only ────────────────────────────
-  const scrollWrapper   = document.querySelector(".services-scroll-wrapper");
-  const scrollContainer = document.querySelector(".services-grid");
-
-  if (scrollWrapper && scrollContainer && !isMobile()) {
-    const getScrollAmount = () => scrollContainer.scrollWidth - scrollWrapper.clientWidth;
-
-    gsap.set(scrollContainer, { force3D: true });
-
-    gsap.to(scrollContainer, {
-      x:    () => -getScrollAmount(),
-      ease: "none",
-      invalidateOnRefresh: true,
-      scrollTrigger: {
-        trigger:    ".services-section",
-        start:      "top top",
-        end:        () => "+=" + getScrollAmount(),
-        scrub:      1.2,
-        pin:        true,
-        anticipatePin: 1,
-        invalidateOnRefresh: true
-      }
-    });
-
-    const nextSection = document.querySelector(".services-section + section");
-    if (nextSection) {
-      gsap.fromTo(nextSection,
-        { y: 100, opacity: 0 },
-        {
-          y: 0, opacity: 1, ease: "power2.out",
-          scrollTrigger: {
-            trigger: ".services-section",
-            start:   "bottom bottom",
-            end:     "bottom top",
-            scrub:   true
-          }
-        }
-      );
+  // ── SERVICES SECTION — BENTO GRID ANIMATIONS (desktop only) ─────────────
+  // Header elements stagger in
+  const srvHeaderTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: ".srv-header",
+      start:   "top 88%",
+      toggleActions: "play none none none"
     }
-  }
-
-  // ── SERVICES SECTION ENTRANCE ─────────────────────────────────────────────
-  gsap.fromTo(".services-section",
-    { opacity: 0, y: 60 },
-    {
-      opacity: 1, y: 0, duration: 1.2, ease: "power3.out",
-      scrollTrigger: { trigger: ".services-section", start: "top 92%", toggleActions: "play none none none" }
-    }
-  );
-
-  const servicesTl = gsap.timeline({
-    scrollTrigger: { trigger: ".services-container", start: "top 88%", toggleActions: "play none none reverse" }
   });
 
-  servicesTl
-    .fromTo(".section-title",
-      { opacity: 0, y: 80, letterSpacing: "10px" },
-      { opacity: 1, y: 0, letterSpacing: "3px", duration: 1.3, ease: "power4.out" }
+  srvHeaderTl
+    .fromTo(".srv-eyebrow",
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }
     )
-    .fromTo(".section-subtitle",
-      { opacity: 0, x: -50 },
-      { opacity: 1, x:  0,  duration: 1,   ease: "power3.out" },
-      "-=0.8"
+    .fromTo(".srv-title-line",
+      { opacity: 0, x: -60 },
+      { opacity: 1, x: 0, duration: 1, ease: "power4.out", stagger: 0.18 },
+      "-=0.4"
     )
-    .fromTo("#blogs-ticker",
-      { opacity: 0, y: -30 },
-      { opacity: 1, y:  0,  duration: 0.9, ease: "power3.out" },
-      "-=0.6"
+    .fromTo(".srv-header-right",
+      { opacity: 0, x: 40 },
+      { opacity: 1, x: 0, duration: 1, ease: "power3.out" },
+      "-=0.7"
     );
 
-  gsap.fromTo(".card",
-    { opacity: 0, y: 50, scale: 0.94 },
+  // Ticker strip
+  gsap.fromTo("#blogs-ticker",
+    { opacity: 0, y: -20 },
     {
-      opacity: 1, y: 0, scale: 1, duration: 0.75, ease: "back.out(1.2)",
-      stagger: { amount: 0.6, from: "start" },
-      scrollTrigger: { trigger: ".services-scroll-wrapper", start: "top 88%", toggleActions: "play none none none" }
+      opacity: 1, y: 0, duration: 0.8, ease: "power3.out",
+      scrollTrigger: {
+        trigger: "#blogs-ticker",
+        start:   "top 92%",
+        toggleActions: "play none none none"
+      }
     }
   );
+
+  // Bento cards — staggered reveal per row
+  const srvRows = document.querySelectorAll(".srv-bento-row");
+  srvRows.forEach((row, rowIdx) => {
+    const cards = row.querySelectorAll(".srv-card");
+    gsap.fromTo(cards,
+      { opacity: 0, y: 55, scale: 0.95 },
+      {
+        opacity:  1,
+        y:        0,
+        scale:    1,
+        duration: 0.8,
+        ease:     "back.out(1.15)",
+        stagger:  { amount: 0.35, from: "start" },
+        scrollTrigger: {
+          trigger:       row,
+          start:         "top 90%",
+          toggleActions: "play none none none"
+        }
+      }
+    );
+  });
 
   // ── CLIENTS SECTION ───────────────────────────────────────────────────────
   const clientItems  = document.querySelectorAll(".client-item");
@@ -752,3 +734,5 @@ window.addEventListener("orientationchange", () => {
     ScrollTrigger.refresh();
   }, 800);
 }, { passive: true });
+
+
