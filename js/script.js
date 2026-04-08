@@ -734,5 +734,3 @@ window.addEventListener("orientationchange", () => {
     ScrollTrigger.refresh();
   }, 800);
 }, { passive: true });
-
-
