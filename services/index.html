@@ -51,7 +51,7 @@
     }
 
     body {
-      background: url('../assets/pexels-hobiphotography-20051576.jpg') center/cover no-repeat fixed;
+      background: url('assets/pexels-hobiphotography-20051576.jpg') center/cover no-repeat fixed;
       color: var(--white);
       font-family: var(--font-body);
       overflow-x: hidden;
@@ -186,6 +186,18 @@
       display: flex;
       align-items: center;
       justify-content: flex-end;
+    }
+
+        .menu a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 600;
+      transition: 0.3s ease;
+    }
+
+    .menu a:hover {
+      opacity: 0.7;
     }
 
     @media (max-width: 768px) {
@@ -940,7 +952,7 @@
     <h2 class="logo">TheTripple</h2>
 
     <div class="menu">
-      <a href="/">Home</a>
+      <a href="./">Home</a>
     </div>
 
   </div>
