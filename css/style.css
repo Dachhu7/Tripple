@@ -1113,7 +1113,7 @@ video {
   inset:               0;
   background:
     linear-gradient(rgba(3,3,3,0.75), rgba(3,3,3,0.9)),
-    url("/assets/about-bg.jpg");
+    url("assets/about-bg.jpg");
   background-size:     cover;
   background-position: center;
   background-repeat:   no-repeat;
