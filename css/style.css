@@ -158,7 +158,6 @@ video {
 .menu a:hover { opacity: 0.7; }
 
 @media (max-width: 768px) {
-  body      { cursor: auto; }
   .logo     { font-size: 18px; }
   .menu     { font-size: 13px; }
 }
@@ -2209,16 +2208,6 @@ video {
   .blog-featured-card:hover {
     transform:  none;
     box-shadow: none;
-  }
-
-  .blog-card:active,
-  .au-team-card:active,
-  .blog-featured-card:active {
-    transform:  scale(0.98);
-  }
-
-  .srv-card:active {
-    transform:  scale(0.97);
   }
 }
 
