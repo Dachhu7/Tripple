@@ -13,9 +13,9 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- GSAP -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/SplitText.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/SplitText.min.js"></script>
 
 
   <style>
@@ -51,7 +51,7 @@
     }
 
     body {
-      background: url('../assets/pexels-hobiphotography-20051576.jpg') center/cover no-repeat fixed;
+      background: url('../assets/pexels-hobiphotography-20051576.jpg') center/cover no-repeat;
       color: var(--white);
       font-family: var(--font-body);
       overflow-x: hidden;
@@ -149,26 +149,6 @@
       padding: 12px 0;
     }
 
-    /* INNER WRAPPER */
-    .navbar-inner {
-      width: 100%;
-      padding: 0 clamp(20px,5vw,64px);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    /* LEFT + RIGHT */
-    .nav-left {
-      display: flex;
-      align-items: center;
-    }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-    }
-
     /* LOGO */
     .logo {
       font-size: 20px;
@@ -201,10 +181,6 @@
     }
 
     @media (max-width: 768px) {
-      .navbar-inner {
-        padding: 0 20px;
-      }
-
       .logo {
         font-size: 18px;
       }
@@ -249,7 +225,7 @@
 
     .hero-eyebrow {
       font-family: var(--font-mono);
-      font-size: clamp(15px,1.1vw,1px);
+      font-size: clamp(15px,1.1vw,18px);
       letter-spacing: 5px;
       text-transform: uppercase;
       color: var(--accent);
@@ -564,7 +540,7 @@
       border: none;
       border-radius: 40px;
       padding: 13px 30px;
-      cursor: none;
+      cursor: pointer;
       text-decoration: none;
       display: inline-block;
       transition: transform 0.3s var(--ease-out), box-shadow 0.3s;
@@ -876,7 +852,7 @@
       border: none;
       border-radius: 50px;
       padding: 18px 44px;
-      cursor: none;
+      cursor: pointer;
       text-decoration: none;
       display: inline-block;
       transition: transform 0.3s var(--ease-out), box-shadow 0.3s;
@@ -895,7 +871,7 @@
       border: 1px solid var(--border);
       border-radius: 50px;
       padding: 18px 44px;
-      cursor: none;
+      cursor: pointer;
       text-decoration: none;
       display: inline-block;
       transition: border-color 0.3s, color 0.3s;
@@ -1450,22 +1426,35 @@
 const dot  = document.getElementById('cursor-dot');
 const ring = document.getElementById('cursor-ring');
 let mx = 0, my = 0, rx = 0, ry = 0;
+let rafIdC = null, idleTimerC = null, isRunningC = false;
 
 window.addEventListener('mousemove', e => {
   mx = e.clientX; my = e.clientY;
   dot.style.left  = mx + 'px';
   dot.style.top   = my + 'px';
-});
+  clearTimeout(idleTimerC);
+  if (!isRunningC) { isRunningC = true; animateCursor(); }
+  idleTimerC = setTimeout(() => {
+    if (rafIdC) { cancelAnimationFrame(rafIdC); rafIdC = null; isRunningC = false; }
+  }, 3000);
+}, { passive: true });
 
 function animateCursor() {
+  rafIdC = requestAnimationFrame(animateCursor);
   rx += (mx - rx) * 0.12;
   ry += (my - ry) * 0.12;
   ring.style.left = rx + 'px';
   ring.style.top  = ry + 'px';
-  requestAnimationFrame(animateCursor);
 }
+isRunningC = true;
 animateCursor();
 
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { cancelAnimationFrame(rafIdC); rafIdC = null; isRunningC = false; clearTimeout(idleTimerC); }
+  else { isRunningC = true; animateCursor(); }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
 
 /* ─── GSAP + ScrollTrigger ─── */
 gsap.registerPlugin(ScrollTrigger);
@@ -1648,19 +1637,6 @@ document.querySelectorAll('.srv-actions').forEach(actions => {
   });
 });
 
-/* Ambient glow follow on desktop */
-if (window.innerWidth > 768) {
-  document.querySelectorAll('.srv-full-card').forEach(card => {
-    card.addEventListener('mousemove', e => {
-      const r = card.getBoundingClientRect();
-      const x = e.clientX - r.left;
-      const y = e.clientY - r.top;
-      card.style.setProperty('--gx', x + 'px');
-      card.style.setProperty('--gy', y + 'px');
-    });
-  });
-}
-
 /* Pause ticker on hover */
 const track = document.querySelector('.strip-track');
 document.querySelector('.strip').addEventListener('mouseenter', () => track.style.animationPlayState = 'paused');
@@ -1670,15 +1646,25 @@ document.querySelector('.strip').addEventListener('mouseleave', () => track.styl
 window.addEventListener('load', () => ScrollTrigger.refresh());
 
 const navbar = document.getElementById("navbar");
+if (!navbar) throw new Error('#navbar missing');
 
 window.addEventListener("scroll", () => {
   const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  navbar.classList.toggle("scrolled", scrollTop > 40);
+}, { passive: true });
 
-  if (scrollTop > 40) {
-    navbar.classList.add("scrolled");
-  } else {
-    navbar.classList.remove("scrolled");
-  }
+/* Pause off-screen background videos */
+if ('IntersectionObserver' in window) {
+  document.querySelectorAll('video[autoplay]').forEach(video => {
+    if (video.closest('.hero')) return;
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) { video.play().catch(() => {}); }
+        else { video.pause(); }
+      });
+    }, { threshold: 0 });
+    obs.observe(video);
+  });
 });
 </script>
 

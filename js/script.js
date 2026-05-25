@@ -546,6 +546,24 @@ function initScrollAnimations() {
 
   } // end if (!isMobile()) — scroll animations
 
+  // ── VIDEO OPTIMIZATION ────────────────────────────────────────────────────
+  // Pause off-screen background videos to reduce GPU/decoder load
+  if ('IntersectionObserver' in window) {
+    document.querySelectorAll('video[autoplay]').forEach(function (video) {
+      if (video.closest('.hero')) return;
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            video.play().catch(function () {});
+          } else {
+            video.pause();
+          }
+        });
+      }, { threshold: 0 });
+      obs.observe(video);
+    });
+  }
+
   // ── MODAL ─────────────────────────────────────────────────────────────────
   const openBtn  = document.getElementById('auOpenModal');
   const modal    = document.getElementById('auModal');

@@ -50,7 +50,7 @@
   <div class="overlay" aria-hidden="true"></div>
 
   <div class="hero-image" id="astronaut" aria-hidden="true">
-    <img src="assets/astronaut.png" alt="" width="900" height="900" loading="eager">
+    <img src="assets/astronaut.png" alt="" width="900" height="900" loading="lazy">
   </div>
 
   <div class="hero-content">
@@ -590,16 +590,20 @@
         <div class="clients-logo-item"><img src="assets/Elite.png"  alt="Elite Martial Arts Academy" loading="lazy"></div>
         <div class="clients-logo-item"><img src="assets/hp.avif"    alt="Hewlett Packard Enterprise" loading="lazy"></div>
         <div class="clients-logo-item"><img src="assets/noah.png"   alt="Noah Arch Events"           loading="lazy"></div>
+        <div class="clients-logo-item"><img src="assets/Co-live.png"  alt="Co-live" loading="lazy"></div>
         <div class="clients-logo-item"><img src="assets/Elite.png"  alt="Elite Martial Arts Academy" loading="lazy"></div>
         <div class="clients-logo-item"><img src="assets/hp.avif"    alt="Hewlett Packard Enterprise" loading="lazy"></div>
         <div class="clients-logo-item"><img src="assets/noah.png"   alt="Noah Arch Events"           loading="lazy"></div>
+        <div class="clients-logo-item"><img src="assets/Co-live.png"  alt="Co-live" loading="lazy"></div>
         <!-- Duplicate set for seamless infinite loop -->
         <div class="clients-logo-item"><img src="assets/Elite.png"  alt="Elite Martial Arts Academy" loading="lazy"></div>
         <div class="clients-logo-item"><img src="assets/hp.avif"    alt="Hewlett Packard Enterprise" loading="lazy"></div>
         <div class="clients-logo-item"><img src="assets/noah.png"   alt="Noah Arch Events"           loading="lazy"></div>
+        <div class="clients-logo-item"><img src="assets/Co-live.png"  alt="Co-live" loading="lazy"></div>
         <div class="clients-logo-item"><img src="assets/Elite.png"  alt="Elite Martial Arts Academy" loading="lazy"></div>
         <div class="clients-logo-item"><img src="assets/hp.avif"    alt="Hewlett Packard Enterprise" loading="lazy"></div>
         <div class="clients-logo-item"><img src="assets/noah.png"   alt="Noah Arch Events"           loading="lazy"></div>
+        <div class="clients-logo-item"><img src="assets/Co-live.png"  alt="Co-live" loading="lazy"></div>
       </div>
     </div>
 
@@ -609,16 +613,20 @@
         <div class="clients-logo-item"><img src="assets/noah.png"   alt="Noah Arch Events"           loading="lazy"></div>
         <div class="clients-logo-item"><img src="assets/hp.avif"    alt="Hewlett Packard Enterprise" loading="lazy"></div>
         <div class="clients-logo-item"><img src="assets/Elite.png"  alt="Elite Martial Arts Academy" loading="lazy"></div>
+        <div class="clients-logo-item"><img src="assets/Co-live.png"  alt="Co-live" loading="lazy"></div>
         <div class="clients-logo-item"><img src="assets/noah.png"   alt="Noah Arch Events"           loading="lazy"></div>
         <div class="clients-logo-item"><img src="assets/hp.avif"    alt="Hewlett Packard Enterprise" loading="lazy"></div>
         <div class="clients-logo-item"><img src="assets/Elite.png"  alt="Elite Martial Arts Academy" loading="lazy"></div>
+        <div class="clients-logo-item"><img src="assets/Co-live.png"  alt="Co-live" loading="lazy"></div>
         <!-- Duplicate set -->
         <div class="clients-logo-item"><img src="assets/noah.png"   alt="Noah Arch Events"           loading="lazy"></div>
         <div class="clients-logo-item"><img src="assets/hp.avif"    alt="Hewlett Packard Enterprise" loading="lazy"></div>
         <div class="clients-logo-item"><img src="assets/Elite.png"  alt="Elite Martial Arts Academy" loading="lazy"></div>
+        <div class="clients-logo-item"><img src="assets/Co-live.png"  alt="Co-live" loading="lazy"></div>
         <div class="clients-logo-item"><img src="assets/noah.png"   alt="Noah Arch Events"           loading="lazy"></div>
         <div class="clients-logo-item"><img src="assets/hp.avif"    alt="Hewlett Packard Enterprise" loading="lazy"></div>
         <div class="clients-logo-item"><img src="assets/Elite.png"  alt="Elite Martial Arts Academy" loading="lazy"></div>
+        <div class="clients-logo-item"><img src="assets/Co-live.png"  alt="Co-live" loading="lazy"></div>
       </div>
     </div>
 
@@ -818,7 +826,7 @@
     <h3 class="au-modal-title" id="auModalTitle">Connect With Us</h3>
     <p class="au-modal-sub">Tell us about your project</p>
 
-    <form class="au-modal-form" novalidate>
+    <form class="au-modal-form" novalidate onsubmit="return false">
       <div class="au-form-group">
         <input type="text" placeholder="Your Name" required autocomplete="name">
       </div>
@@ -859,14 +867,23 @@
 
   var mouseX  = 0, mouseY  = 0;
   var circleX = 0, circleY = 0;
-  var rafId   = null;
+  var rafId   = null, idleTimer = null;
+  var isRunning = false;
 
-  /* Track exact mouse position */
+  /* Track exact mouse position + reset idle timer */
   document.addEventListener('mousemove', function (e) {
     mouseX = e.clientX;
     mouseY = e.clientY;
     dot.style.left = mouseX + 'px';
     dot.style.top  = mouseY + 'px';
+    clearTimeout(idleTimer);
+    if (!isRunning) {
+      isRunning = true;
+      animateCursor();
+    }
+    idleTimer = setTimeout(function () {
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; isRunning = false; }
+    }, 3000);
   }, { passive: true });
 
   /* Smooth lagged circle — single rAF loop */
@@ -878,13 +895,16 @@
     circle.style.top  = circleY + 'px';
   }
 
+  isRunning = true;
   animateCursor();
 
   /* Pause rAF when page is hidden (battery/CPU savings) */
   document.addEventListener('visibilitychange', function () {
     if (document.hidden) {
-      cancelAnimationFrame(rafId);
+      cancelAnimationFrame(rafId); rafId = null; isRunning = false;
+      clearTimeout(idleTimer);
     } else {
+      isRunning = true;
       animateCursor();
     }
   });
