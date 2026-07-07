@@ -30,7 +30,6 @@
 }
 
 html {
-  scroll-behavior: smooth;
 }
 
 body {
@@ -55,30 +54,35 @@ video {
 /* ============================================================
    CUSTOM CURSOR
 ============================================================ */
-.cursor-dot {
-  position:       fixed;
-  width:          6px;
-  height:         6px;
-  background:     #ffffff;
-  border-radius:  50%;
-  pointer-events: none;
-  z-index:        9999;
-  transform:      translate(-50%, -50%);
-  will-change:    left, top;
+#cursor-dot, #cursor-ring {
+  position:         fixed;
+  border-radius:    50%;
+  pointer-events:   none;
+  z-index:          9999;
+  mix-blend-mode:   difference;
+  transform:        translate(-50%,-50%);
+}
+#cursor-dot {
+  width:            8px; height: 8px;
+  background:       var(--clr-white);
+  transition:       transform 0.1s;
+}
+#cursor-ring {
+  width:            36px; height: 36px;
+  border:           1.5px solid rgba(255,255,255,0.6);
+  transition:       width 0.35s cubic-bezier(0.22,1,0.36,1),
+                    height 0.35s cubic-bezier(0.22,1,0.36,1),
+                    opacity 0.35s;
+}
+body:has(a:hover) #cursor-ring,
+body:has(button:hover) #cursor-ring,
+body:has(.srv-full-card:hover) #cursor-ring {
+  width: 64px; height: 64px; opacity: 0.5;
 }
 
-.cursor-circle {
-  position:       fixed;
-  width:          32px;
-  height:         32px;
-  border:         1.5px solid rgba(255,255,255,0.7);
-  border-radius:  50%;
-  pointer-events: none;
-  z-index:        9998;
-  transform:      translate(-50%, -50%);
-  /* Only transition size changes — position driven by rAF */
-  transition:     width 0.2s ease, height 0.2s ease;
-  will-change:    left, top;
+@media (max-width: 768px) {
+  body { cursor: auto; }
+  #cursor-dot, #cursor-ring { display: none; }
 }
 
 /* ============================================================
@@ -123,7 +127,19 @@ video {
   padding:             12px 0;
 }
 
-/* Bootstrap's .container handles the inner width */
+.container {
+  width: 100%;
+  max-width: var(--max-w, 1280px);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: clamp(16px, 4vw, 50px);
+  padding-right: clamp(16px, 4vw, 50px);
+}
+.d-flex { display: flex; }
+.justify-content-between { justify-content: space-between; }
+.align-items-center { align-items: center; }
+.fixed-top { position: fixed; top: 0; left: 0; width: 100%; z-index: 1030; }
+
 .navbar .container {
   padding-left:  clamp(20px, 5vw, 64px);
   padding-right: clamp(20px, 5vw, 64px);
@@ -404,6 +420,8 @@ video {
   color:      var(--clr-white);
   overflow:   hidden;
   z-index:    1;
+  content-visibility: auto;
+  contain-intrinsic-size: 700px;
 }
 
 .services-bg-video {
@@ -962,6 +980,8 @@ video {
   padding:    clamp(50px, 7vw, 100px) 0;
   overflow:   hidden;
   background: var(--clr-bg);
+  content-visibility: auto;
+  contain-intrinsic-size: 600px;
 }
 
 /* Subtle gradient border lines top + bottom */
@@ -1022,7 +1042,6 @@ video {
   align-items: center;
   width:       max-content;
   gap:         clamp(40px, 6vw, 90px);
-  /* Forward direction */
   animation:   clientsScrollFwd 28s linear infinite;
   will-change: transform;
 }
@@ -1103,6 +1122,8 @@ video {
   background: #030303;
   overflow:   hidden;
   padding:    0;
+  content-visibility: auto;
+  contain-intrinsic-size: 700px;
 }
 
 .au-bg-base {
@@ -1115,16 +1136,6 @@ video {
   background-position: center;
   background-repeat:   no-repeat;
   z-index: 0;
-}
-
-.au-grain {
-  position:         absolute;
-  inset:            0;
-  z-index:          1;
-  opacity:          0.04;
-  pointer-events:   none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size:  200px 200px;
 }
 
 .au-container {
@@ -1222,7 +1233,6 @@ video {
   height:      60px;
   background:  linear-gradient(to bottom, var(--clr-accent), transparent);
   animation:   scrollLinePulse 2s ease-in-out infinite;
-  will-change: opacity, transform;
 }
 
 @keyframes scrollLinePulse {
@@ -1786,6 +1796,8 @@ video {
   padding:    40px 0 80px;
   overflow:   hidden;
   z-index:    5;
+  content-visibility: auto;
+  contain-intrinsic-size: 800px;
 }
 
 .blogs-bg-glow {
@@ -1819,17 +1831,6 @@ video {
   top:        50%;
   left:       40%;
   transform:  translate(-50%, -50%);
-}
-
-.blogs-grain {
-  position:         absolute;
-  inset:            0;
-  z-index:          1;
-  opacity:          0.035;
-  pointer-events:   none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
-  background-size:  180px 180px;
-  background-repeat: repeat;
 }
 
 .blogs-header {

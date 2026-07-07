@@ -10,7 +10,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- GSAP -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -335,7 +334,6 @@
       width: max-content;
       white-space: nowrap;
       animation: stripScroll 28s linear infinite;
-      will-change: transform;
     }
     .strip-item {
       font-family: var(--font-head);
@@ -1634,9 +1632,12 @@ document.querySelectorAll('.srv-actions').forEach(actions => {
 });
 
 /* Pause ticker on hover */
+const strip = document.querySelector('.strip');
 const track = document.querySelector('.strip-track');
-document.querySelector('.strip').addEventListener('mouseenter', () => track.style.animationPlayState = 'paused');
-document.querySelector('.strip').addEventListener('mouseleave', () => track.style.animationPlayState = 'running');
+if (strip && track) {
+  strip.addEventListener('mouseenter', () => track.style.animationPlayState = 'paused');
+  strip.addEventListener('mouseleave', () => track.style.animationPlayState = 'running');
+}
 
 /* Refresh ST on load */
 window.addEventListener('load', () => ScrollTrigger.refresh());

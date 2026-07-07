@@ -10,17 +10,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- Bootstrap -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
   <!-- Site CSS -->
   <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-<div class="cursor-dot"></div>
-<div class="cursor-circle"></div>
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
 
 <!-- Noise / Ambient Decorative Layers -->
 <div class="noise" aria-hidden="true"></div>
@@ -92,8 +89,6 @@
   <div class="aboutus-sticky-wrapper">
 
     <div class="au-bg-base" aria-hidden="true"></div>
-    <div class="au-grain"   aria-hidden="true"></div>
-
     <!-- BLOCK 1 — OPENING -->
     <div class="au-opening" id="au-opening">
       <div class="au-container">
@@ -643,8 +638,6 @@
   <div class="blogs-bg-glow glow-1" aria-hidden="true"></div>
   <div class="blogs-bg-glow glow-2" aria-hidden="true"></div>
   <div class="blogs-bg-glow glow-3" aria-hidden="true"></div>
-  <div class="blogs-grain"          aria-hidden="true"></div>
-
   <!-- HEADER -->
   <div class="blogs-header" id="blogs-header">
     <p class="blogs-eyebrow">OUR JOURNAL</p>
@@ -854,60 +847,38 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js" defer></script>
 <script src="js/script.js" defer></script>
 
-<!-- Custom cursor — inline for immediate execution (no defer needed) -->
+<!-- Cursor -->
 <script>
-(function () {
-  'use strict';
+const dot  = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+let rafIdC = null, idleTimerC = null, isRunningC = false;
 
-  var dot    = document.querySelector('.cursor-dot');
-  var circle = document.querySelector('.cursor-circle');
+window.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  dot.style.left  = mx + 'px';
+  dot.style.top   = my + 'px';
+  clearTimeout(idleTimerC);
+  if (!isRunningC) { isRunningC = true; animateCursor(); }
+  idleTimerC = setTimeout(() => {
+    if (rafIdC) { cancelAnimationFrame(rafIdC); rafIdC = null; isRunningC = false; }
+  }, 3000);
+}, { passive: true });
 
-  if (!dot || !circle) return;
+function animateCursor() {
+  rafIdC = requestAnimationFrame(animateCursor);
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px';
+  ring.style.top  = ry + 'px';
+}
+isRunningC = true;
+animateCursor();
 
-  var mouseX  = 0, mouseY  = 0;
-  var circleX = 0, circleY = 0;
-  var rafId   = null, idleTimer = null;
-  var isRunning = false;
-
-  /* Track exact mouse position + reset idle timer */
-  document.addEventListener('mousemove', function (e) {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    dot.style.left = mouseX + 'px';
-    dot.style.top  = mouseY + 'px';
-    clearTimeout(idleTimer);
-    if (!isRunning) {
-      isRunning = true;
-      animateCursor();
-    }
-    idleTimer = setTimeout(function () {
-      if (rafId) { cancelAnimationFrame(rafId); rafId = null; isRunning = false; }
-    }, 3000);
-  }, { passive: true });
-
-  /* Smooth lagged circle — single rAF loop */
-  function animateCursor() {
-    rafId    = requestAnimationFrame(animateCursor);
-    circleX += (mouseX - circleX) * 0.15;
-    circleY += (mouseY - circleY) * 0.15;
-    circle.style.left = circleX + 'px';
-    circle.style.top  = circleY + 'px';
-  }
-
-  isRunning = true;
-  animateCursor();
-
-  /* Pause rAF when page is hidden (battery/CPU savings) */
-  document.addEventListener('visibilitychange', function () {
-    if (document.hidden) {
-      cancelAnimationFrame(rafId); rafId = null; isRunning = false;
-      clearTimeout(idleTimer);
-    } else {
-      isRunning = true;
-      animateCursor();
-    }
-  });
-}());
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { cancelAnimationFrame(rafIdC); rafIdC = null; isRunningC = false; clearTimeout(idleTimerC); }
+  else { isRunningC = true; animateCursor(); }
+});
 </script>
 
 

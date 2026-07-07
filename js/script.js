@@ -48,14 +48,24 @@ mm.add('(min-width: 768px)', () => {
   gsap.set('.hero-text .left',  { x: () => -window.innerWidth * 1.5 });
   gsap.set('.hero-text .right', { x: () =>  window.innerWidth * 1.5 });
 
-  const tl = gsap.timeline({ repeat: -1, repeatDelay: 1 });
+  const tl = gsap.timeline({ paused: true, repeat: -1 });
   tl.to('.hero-text .left',  { x: 0, duration: 3,   ease: 'power3.out', stagger: 0.3 }, 0);
   tl.to('.hero-text .right', { x: 0, duration: 3,   ease: 'power3.out' }, 0);
   tl.to({}, { duration: 1.5 });
   tl.to('.hero-text .left',  { x: () =>  window.innerWidth * 1.2, duration: 2.5, ease: 'power2.in', stagger: 0.2 });
   tl.to('.hero-text .right', { x: () => -window.innerWidth * 1.2, duration: 2.5, ease: 'power2.in' }, '<');
 
-  return () => tl.kill();
+  // Restart each time hero enters view, pause when it leaves
+  ScrollTrigger.create({
+    trigger: '.hero',
+    start: 'top 90%',
+    onEnter: () => tl.restart(),
+    onLeave: () => tl.pause(),
+    onEnterBack: () => tl.restart(),
+    onLeaveBack: () => tl.pause()
+  });
+
+  return () => { tl.kill(); gsap.set('.hero-text .left, .hero-text .right', { clearProps: 'all' }); };
 });
 
 mm.add('(max-width: 767px)', () => {
@@ -71,27 +81,33 @@ mm.add('(max-width: 767px)', () => {
 const astronaut = document.getElementById('astronaut');
 let angle      = 0;
 let rafId      = null;
-let frameCount = 0;
 
 function floatAstronaut() {
-  rafId = requestAnimationFrame(floatAstronaut);
-  frameCount++;
-  // ~30fps throttle: skip every other frame
-  if (frameCount % 2 !== 0) return;
-
   const x = Math.sin(angle * 0.8) * 60 + Math.sin(angle * 1.5) * 25;
   const y = Math.cos(angle * 0.7) * 50 + Math.cos(angle * 1.3) * 20;
   const r = Math.sin(angle * 0.4) * 8;
   const z = 0.7 + (Math.sin(angle * 0.5) + 1) / 2 * 0.6;
 
-  // Single concatenated transform avoids multiple style mutations
   astronaut.style.transform =
     `translate(-50%,-50%) translate(${x}px,${y}px) rotate(${r}deg) scale(${z})`;
   angle += 0.015;
+  rafId = requestAnimationFrame(floatAstronaut);
 }
 
 if (astronaut && window.innerWidth > 768 && !prefersReducedMotion) {
   floatAstronaut();
+}
+
+// Pause rAF when off-screen (saves GPU/CPU during scroll)
+if (astronaut && 'IntersectionObserver' in window) {
+  const obs = new IntersectionObserver(function (entries) {
+    if (!entries[0].isIntersecting) {
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    } else if (!rafId && window.innerWidth > 768) {
+      floatAstronaut();
+    }
+  }, { threshold: 0 });
+  obs.observe(astronaut);
 }
 
 // Pause float when page hidden — saves battery on mobile/background tabs
@@ -118,13 +134,6 @@ if (filterContainer) {
 // ─── 6. MAIN SCROLL INIT ────────────────────────────────────────────────────
 // FIX 1: Guard against load-event race on cached pages.
 function initScrollAnimations() {
-
-  // FIX 4 & 5: normalizeScroll + config — desktop only.
-  // normalizeScroll on mobile intercepts native touch and causes jank.
-  if (!isMobile()) {
-    ScrollTrigger.normalizeScroll(true);
-    ScrollTrigger.config({ limitCallbacks: true, syncInterval: 40 });
-  }
 
   // ── NAVBAR ──────────────────────────────────────────────────────────────────
   const navbar = document.getElementById('navbar');
@@ -264,7 +273,7 @@ function initScrollAnimations() {
 
     // ── BLOGS SECTION ─────────────────────────────────────────────────────────
     const blogHeaderTl = gsap.timeline({
-      scrollTrigger: { trigger: '.blogs-header', start: 'top 85%', toggleActions: 'play none none reverse' }
+      scrollTrigger: { trigger: '.blogs-header', start: 'top 85%', toggleActions: 'play none none none' }
     });
 
     blogHeaderTl
@@ -272,94 +281,47 @@ function initScrollAnimations() {
       .to('.blogs-title-line', { opacity: 1, y:  0, duration: 1.2, ease: 'power4.out', stagger: 0.15 }, '-=0.5')
       .to('.blogs-subtitle',   { opacity: 1, y:  0, duration: 1,   ease: 'power3.out' }, '-=0.6');
 
-    if (!prefersReducedMotion) {
-      gsap.fromTo('.blogs-title',
-        { scale: 0.88, opacity: 0 },
-        {
-          scale: 1, opacity: 1, ease: 'power2.out',
-          scrollTrigger: { trigger: '.blogs-header', start: 'top 90%', end: 'top 30%', scrub: 1.5 }
-        }
-      );
-    }
-
     gsap.to('.blogs-featured-wrap', {
       opacity: 1, y: 0, duration: 1.3, ease: 'power3.out',
-      scrollTrigger: { trigger: '.blogs-featured-wrap', start: 'top 85%', toggleActions: 'play none none reverse' }
+      scrollTrigger: { trigger: '.blogs-featured-wrap', start: 'top 85%', once: true }
     });
-
-    if (!prefersReducedMotion) {
-      gsap.to('.blog-featured-img', {
-        y: -50, ease: 'none',
-        scrollTrigger: { trigger: '.blog-featured-card', start: 'top bottom', end: 'bottom top', scrub: 1.5 }
-      });
-    }
 
     gsap.to('.blog-card', {
       opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
       stagger: { amount: 0.5, from: 'start' },
-      scrollTrigger: { trigger: '.blogs-grid-wrap', start: 'top 82%', toggleActions: 'play none none reverse' }
+      scrollTrigger: { trigger: '.blogs-grid-wrap', start: 'top 82%', once: true }
     });
-
-    if (!prefersReducedMotion) {
-      document.querySelectorAll('.blog-card').forEach(card => {
-        const img = card.querySelector('.blog-card-img');
-        if (!img) return;
-        gsap.to(img, {
-          y: -30, ease: 'none',
-          scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: 1.2 }
-        });
-      });
-    }
 
     gsap.to('.blogs-strip-wrap', {
       opacity: 1, x: 0, duration: 1.2, ease: 'power3.out',
-      scrollTrigger: { trigger: '.blogs-strip-wrap', start: 'top 88%', toggleActions: 'play none none reverse' }
+      scrollTrigger: { trigger: '.blogs-strip-wrap', start: 'top 88%', once: true }
     });
 
-    gsap.fromTo('.blog-strip-card',
-      { opacity: 0, x: 50 },
-      {
-        opacity: 1, x: 0, ease: 'power2.out', stagger: 0.1,
-        scrollTrigger: { trigger: '.blogs-strip-wrap', start: 'top 80%', end: 'top 30%', scrub: 1 }
-      }
-    );
-
-    if (!prefersReducedMotion) {
-      gsap.to('.glow-1', { y: -120, x:  40, ease: 'none', scrollTrigger: { trigger: '.blogs-section', start: 'top bottom', end: 'bottom top', scrub: 2   } });
-      gsap.to('.glow-2', { y:   80, x: -30, ease: 'none', scrollTrigger: { trigger: '.blogs-section', start: 'top bottom', end: 'bottom top', scrub: 2.5 } });
-      gsap.to('.glow-3', { y:  -60,         ease: 'none', scrollTrigger: { trigger: '.blogs-section', start: 'top bottom', end: 'bottom top', scrub: 1.8 } });
-    }
+    gsap.to('.blog-strip-card', {
+      opacity: 1, x: 0, duration: 0.6, ease: 'power2.out', stagger: 0.08,
+      scrollTrigger: { trigger: '.blogs-strip-wrap', start: 'top 80%', once: true }
+    });
 
     gsap.to('.blogs-cta-wrap', {
       opacity: 1, y: 0, duration: 1, ease: 'back.out(1.4)',
-      scrollTrigger: { trigger: '.blogs-cta-wrap', start: 'top 90%', toggleActions: 'play none none reverse' }
+      scrollTrigger: { trigger: '.blogs-cta-wrap', start: 'top 90%', once: true }
     });
 
     // ── ABOUT US SECTION ──────────────────────────────────────────────────────
     gsap.to('#au-eyebrow', {
       opacity: 1, y: 0, duration: 1, ease: 'power3.out',
-      scrollTrigger: { trigger: '.au-opening', start: 'top 85%', toggleActions: 'play none none reverse' }
+      scrollTrigger: { trigger: '.au-opening', start: 'top 85%', once: true }
     });
 
     gsap.to('.au-hl-line', {
       opacity: 1, y: 0, duration: 1.3, ease: 'power4.out', stagger: 0.14,
-      scrollTrigger: { trigger: '.au-headline-wrap', start: 'top 82%', toggleActions: 'play none none reverse' }
+      scrollTrigger: { trigger: '.au-headline-wrap', start: 'top 82%', once: true }
     });
 
     gsap.to('#au-opening-sub', {
       opacity: 1, y: 0, duration: 1.1, ease: 'power3.out', delay: 0.35,
-      scrollTrigger: { trigger: '.au-opening', start: 'top 78%', toggleActions: 'play none none reverse' }
+      scrollTrigger: { trigger: '.au-opening', start: 'top 78%', once: true }
     });
-
-    if (!prefersReducedMotion) {
-      gsap.fromTo('.au-headline',
-        { scale: 0.9 },
-        {
-          scale: 1.04, ease: 'none',
-          scrollTrigger: { trigger: '.au-opening', start: 'top bottom', end: 'bottom top', scrub: 1.8 }
-        }
-      );
-    }
 
     if (!prefersReducedMotion) {
       gsap.to('.au-bg-base', {
@@ -375,42 +337,18 @@ function initScrollAnimations() {
 
     gsap.to('.au-marquee-divider', {
       opacity: 1, duration: 1.2, ease: 'power2.out',
-      scrollTrigger: { trigger: '.au-marquee-divider', start: 'top 92%', toggleActions: 'play none none reverse' }
+      scrollTrigger: { trigger: '.au-marquee-divider', start: 'top 92%', once: true }
     });
-
-    // Velocity-based marquee speed (desktop only)
-    if (!prefersReducedMotion) {
-      const fwdTrack = document.querySelector('.au-marquee-fwd');
-      const revTrack = document.querySelector('.au-marquee-rev');
-      if (fwdTrack && revTrack) {
-        ScrollTrigger.create({
-          trigger: '.au-marquee-divider',
-          start:   'top bottom',
-          end:     'bottom top',
-          scrub:   1,
-          onUpdate: (self) => {
-            const vel = self.getVelocity();
-            fwdTrack.style.animationDuration = Math.max(8,  28 - Math.abs(vel) * 0.015) + 's';
-            revTrack.style.animationDuration = Math.max(6,  22 - Math.abs(vel) * 0.012) + 's';
-          }
-        });
-      }
-    }
 
     // Split story
     gsap.to('#au-split-left', {
       opacity: 1, x: 0, duration: 1.3, ease: 'power3.out',
-      scrollTrigger: { trigger: '.au-split-story', start: 'top 80%', toggleActions: 'play none none reverse' }
+      scrollTrigger: { trigger: '.au-split-story', start: 'top 80%', once: true }
     });
-
-    if (!prefersReducedMotion) {
-      gsap.to('.au-img-card-back',  { y: -40, rotate:  6, ease: 'none', scrollTrigger: { trigger: '.au-split-story', start: 'top bottom', end: 'bottom top', scrub: 1.5 } });
-      gsap.to('.au-img-card-front', { y: -20, rotate: -3, ease: 'none', scrollTrigger: { trigger: '.au-split-story', start: 'top bottom', end: 'bottom top', scrub: 1.2 } });
-    }
 
     gsap.to('.au-story-block', {
       opacity: 1, x: 0, duration: 1.0, ease: 'power3.out', stagger: 0.2,
-      scrollTrigger: { trigger: '#au-split-right', start: 'top 78%', toggleActions: 'play none none reverse' }
+      scrollTrigger: { trigger: '#au-split-right', start: 'top 78%', once: true }
     });
 
     // Border highlight on enter
@@ -428,7 +366,7 @@ function initScrollAnimations() {
     if (statItems.length) {
       gsap.to('.au-stat-item', {
         opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', stagger: 0.12,
-        scrollTrigger: { trigger: '.au-stats-wrap', start: 'top 80%', toggleActions: 'play none none reverse' }
+        scrollTrigger: { trigger: '.au-stats-wrap', start: 'top 80%', once: true }
       });
 
       ScrollTrigger.create({
@@ -489,7 +427,7 @@ function initScrollAnimations() {
       );
 
       const ctaTl = gsap.timeline({
-        scrollTrigger: { trigger: '.au-cta-banner', start: 'top 85%', toggleActions: 'play none none reverse' }
+        scrollTrigger: { trigger: '.au-cta-banner', start: 'top 85%', once: true }
       });
       ctaTl
         .to('#au-cta .au-eyebrow', { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out' })
@@ -497,25 +435,18 @@ function initScrollAnimations() {
         .to('.au-cta-actions',     { opacity: 1, y: 0, duration: 1,   ease: 'back.out(1.5)' }, '-=0.6');
 
       if (!prefersReducedMotion) {
+        gsap.to('.au-cta-line', {
+          scaleX: 1, transformOrigin: 'center center', duration: 1.6, ease: 'power3.inOut', stagger: 0.15,
+          scrollTrigger: { trigger: '.au-cta-banner', start: 'top 88%', once: true }
+        });
+
         gsap.fromTo('.au-cta-highlight',
           { opacity: 0, x: -30 },
           {
-            opacity: 1, x: 0, ease: 'power3.out',
-            scrollTrigger: { trigger: '.au-cta-banner', start: 'top 75%', end: 'top 40%', scrub: 1.5 }
+            opacity: 1, x: 0, duration: 0.9, ease: 'power3.out',
+            scrollTrigger: { trigger: '.au-cta-banner', start: 'top 75%', once: true }
           }
         );
-
-        gsap.to('.au-cta-line', {
-          scaleX: 1, transformOrigin: 'center center', duration: 1.6, ease: 'power3.inOut', stagger: 0.15,
-          scrollTrigger: { trigger: '.au-cta-banner', start: 'top 88%', toggleActions: 'play none none reverse' }
-        });
-      }
-
-      if (!prefersReducedMotion) {
-        gsap.to('.au-cta-glow', {
-          y: -80, ease: 'none',
-          scrollTrigger: { trigger: '.au-cta-banner', start: 'top bottom', end: 'bottom top', scrub: 2 }
-        });
       }
 
       ScrollTrigger.create({
@@ -539,7 +470,7 @@ function initScrollAnimations() {
         { opacity: 0, y: 50 },
         {
           opacity: 1, y: 0, duration: 1, ease: 'power3.out',
-          scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none reverse' }
+          scrollTrigger: { trigger: el, start: 'top 88%', once: true }
         }
       );
     });
@@ -550,7 +481,7 @@ function initScrollAnimations() {
   // Pause off-screen background videos to reduce GPU/decoder load
   if ('IntersectionObserver' in window) {
     document.querySelectorAll('video[autoplay]').forEach(function (video) {
-      if (video.closest('.hero')) return;
+
       var obs = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
           if (entry.isIntersecting) {
